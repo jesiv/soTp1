@@ -5,13 +5,35 @@
 #include <queue>
 #include "basesched.h"
 
+using namespace std;
+
 class SchedRR : public SchedBase {
 	public:
 		SchedRR(std::vector<int> argn);
         ~SchedRR();
-		virtual void load(int pid);
-		virtual void unblock(int pid);
-		virtual int tick(int cpu, const enum Motivo m);
+		void load(int pid);
+		void unblock(int pid);
+		int tick(int cpu, const enum Motivo m);
+    
+  private:
+
+    int proxDisponible();
+
+ struct tarea {
+    int pid;
+    bool bloqueado;
+    tarea(int id): pid(id), bloqueado(false) {}; 
+  };
+
+  struct Cpu {
+    bool ocupado;
+    int quantum;
+    Cpu(int q): ocupado(false), quantum(q) {};
+  };
+
+    vector<tarea> cola; 
+    vector<Cpu> cores;
+    int proxTarea;
 
 };
 
