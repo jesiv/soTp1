@@ -17,14 +17,11 @@ class SchedRR : public SchedBase {
     
   private:
 
-    int proxIdDisponible();
+    int proxDisponible();
     int encontrarPos(int);
-    bool estaBloqueada(int);
-    bool todasBloqueadas();
 
  struct tarea {
     int pid;
-    bool corriendo;
     bool bloqueado;
     tarea(int id): pid(id), bloqueado(false) {}; 
   };
@@ -32,13 +29,12 @@ class SchedRR : public SchedBase {
   struct Cpu {
     bool ocupado;
     int quantum;
-    int contador;
-    Cpu(int q): ocupado(false), quantum(q), contador(0) {};
+    Cpu(int q): ocupado(false), quantum(q) {};
   };
 
     vector<tarea> cola; 
     vector<Cpu> cores;
-    int idActual;
+    int proxTarea;
 
 };
 
