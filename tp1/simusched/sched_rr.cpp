@@ -11,56 +11,70 @@ SchedRR::SchedRR(vector<int> argn) {
     Cpu c(argn[i+2]);
     this->cores.push_back(c);
   }
-  this->idActual = -1;
+  this->idActual = IDLE_TASK;
 }
 
 SchedRR::~SchedRR() {
-
 }
 
 
 void SchedRR::load(int pid) {
   tarea nuevaTarea(pid);
   this->cola.push_back(nuevaTarea);
-  if (this->cola.size() == 0)
+  if (this->cola.size() == 0) //esto no deberia ser necesario
     this->idActual = 0;
 }
 
 void SchedRR::unblock(int pid) {
-  for (unsigned int i = 0 ; i < this->cola.size() ; i++) {
-    if (this->cola[i].pid == pid) {
-      this->cola[i].bloqueado = false;
+  int pos = encontrarPos(pid);
+  this->cola[pos].estado = CORRIENDO;
+ // for (unsigned int i = 0 ; i < this->cola.size() ; i++) {
+ //   if (this->cola[i].pid == pid) {
+ //     this->cola[i].bloqueado = false;
+ //   }
+ // }
+  return;
+}
+
+
+int SchedRR::proxIdDisponible() { //invariante: si esta LISTA entonces no esta BLOQUEADA ni CORRIENDO
+  int res = IDLE_TASK;
+
+  if(this->unicaTareaCorriendo()) {
+    res = this->idActual;
+  } else {
+    if(this->algunaLista()) {
+      res = this->idActual;
+      bool encontre = false;
+      int posIdActual = encontrarPos(this->idActual);
+      int i = ((posIdActual + 1) % this->cola.size());
+   
+      while (i != posIdActual && !encontre) {
+        if (this->cola[i].estado == LISTA) {
+          res = this->cola[i].pid;
+          encontre = true;
+        }
+        i = (i+1) % this->cola.size();
+       }
+     } 
+   }
+  return res;
+}
+
+bool SchedRR::unicaTareaCorriendo(){
+  int  contador = 0;
+  bool esLaActual = false;
+  
+  for (unsigned int i = 0; i < this->cola.size(); i++) {
+    if (this->cola[i].estado == CORRIENDO){
+      contador++;
+      if (this->cola[i].pid == this->idActual) esLaActual = true;
     }
   }
+
+  return (contador == 1 && esLaActual);
 }
 
-bool SchedRR::estaBloqueada(int pid){
-  int pos = encontrarPos(pid);
-  return cola[pos].bloqueado;
-}
-
-int SchedRR::proxIdDisponible() {
-  int res = this->idActual;
-  bool encontre = false;
-  int n = encontrarPos(this->idActual);
-  int i = ((n + 1) % this->cola.size());
-//  cout << "cola.size() : " << this->cola.size() << endl;
-//  cout << "posncnon n: " << n << endl;
-  //  cout << "posicion i: " << i << endl;
-    //while (i != (idActual % ((unsigned int)this->cola.size())) && !encontre) {
-    while (i != n && !encontre) {
-      if (!this->cola[i].bloqueado && !cola[i].corriendo) {
-        res = this->cola[i].pid;
-        encontre = true;
-      }
-      i = (i+1) % this->cola.size();
-    }
-    if (!encontre && estaBloqueada(res)) {
-      res = IDLE_TASK;  
-    }
-
-    return res;
-}
 
 int SchedRR::encontrarPos(int pid){ //el elemento tiene que estar en el vector
   int res = -1;
@@ -73,64 +87,81 @@ int SchedRR::encontrarPos(int pid){ //el elemento tiene que estar en el vector
    
 }
 
-bool SchedRR::todasBloqueadas() {
-  bool res = true;
+bool SchedRR::estaBloqueada(int pid){ //ver si es necesaria
+  int pos = encontrarPos(pid);
+  return cola[pos].estado == BLOQUEADA;
+}
+
+bool SchedRR::algunaLista() {
+  bool res = false;
   unsigned int i = 0;
   while ((i < this->cola.size()) && res) {
-    if (!this->cola[i].bloqueado && !this->cola[i].corriendo)
-      res = false;
+    if (this->cola[i].estado == LISTA)
+      res = true;
     i++;
   }
   return res;
 }
 
+
+int SchedRR::finalizoQuantum(int pid){ 
+  int next_pid = this->proxIdDisponible();
+
+  int posTareaActual = encontrarPos(pid);
+  cola[posTareaActual].estado = LISTA;    
+  int posTareaSiguiente = encontrarPos(next_pid);
+  cola[posTareaSiguiente].estado = CORRIENDO;
+
+  return next_pid;
+}
+
+
 int SchedRR::tick(int cpu, const enum Motivo m) {
   int curr_pid = current_pid(cpu);
-  int next_pid;
-  
+  int next_pid; 
+
+  cout << " IdActual: " << curr_pid << " |motivo" << m <<" |cantidad proc: " << this->cola.size() << endl;
 
   if (m == TICK) {
-    if (cola.size() != 0 && curr_pid == IDLE_TASK && !this->todasBloqueadas()) {
-      this->idActual = proxIdDisponible();
-      next_pid = this->idActual;
-      curr_pid = this->idActual;
+    if (curr_pid == IDLE_TASK) {
+      next_pid = this->proxIdDisponible();
     } else {
       cores[cpu].contador++;
       if (cores[cpu].contador == cores[cpu].quantum) {
-        cola[encontrarPos(curr_pid)].corriendo = false;
-        next_pid = this->proxIdDisponible();
+        next_pid = finalizoQuantum(curr_pid);
         cores[cpu].contador = 0;
       } else {
         next_pid = curr_pid;
-      }
-      
+      }    
     }
   }
 
   if (m == BLOCK) {
-    int posActual = encontrarPos(curr_pid);
-    if ( !(this->cola[posActual].bloqueado) )
-      this->cola[posActual].bloqueado = true;
-    next_pid = this->proxIdDisponible();
-    cores[cpu].contador = 0;
-    cola[encontrarPos(curr_pid)].corriendo = false;
-  }
- 
-  if (m == EXIT) {
-    next_pid = this->proxIdDisponible();
-    int pos = encontrarPos(curr_pid);
-    this->cola.erase(this->cola.begin()+pos);    
-    cores[cpu].contador = 0;
-  }
- 
-  if ((this->cola.size() == 0) || this->todasBloqueadas() || (curr_pid == IDLE_TASK && this->todasBloqueadas())) {
-    next_pid = IDLE_TASK; 
-  } else {
-    this->idActual = next_pid;
-  }
-  
-  if (next_pid != IDLE_TASK)
-    cola[encontrarPos(next_pid)].corriendo = true;
-  return next_pid;
+    int posTareaActual = encontrarPos(curr_pid);
+    cola[posTareaActual].estado = BLOQUEADA;
 
+    next_pid = proxIdDisponible();
+    int posProxTarea = encontrarPos(next_pid);
+    cola[posProxTarea].estado = CORRIENDO;
+    cores[cpu].contador = 0;
+  }  
+
+  if (m == EXIT) {
+    int pos  = encontrarPos(curr_pid);
+    this->cola.erase(this->cola.begin()+pos);    
+    next_pid = this->proxIdDisponible();
+    cores[cpu].contador = 0;
+  }
+ 
+  cout << "proxPros: " << next_pid << endl;
+ 
+ //if ((this->cola.size() == 0) || this->todasBloqueadas() || (curr_pid == IDLE_TASK && this->todasBloqueadas())) {
+ //   next_pid = IDLE_TASK; 
+ // } else {
+ //   this->idActual = next_pid;
+ // }
+ //
+  
+  this->idActual = next_pid;
+  return next_pid;
 }
