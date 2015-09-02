@@ -19,34 +19,21 @@ class SchedRR : public SchedBase {
     
   private:
  
-    int proxIdDisponible();
+    int proxIdDisponible(int);
     int encontrarPos(int);
     int finalizoQuantum(int);
-    bool algunaLista();
-    bool unicaTareaCorriendo();
-    bool estaBloqueada(int);
-    bool todasBloqueadas();
+    bool cpusVacios();
 
- struct tarea {
+    struct Cpu {
+      int quantum;
+      int pid;
+      int contador;
+      Cpu(int q): quantum(q), pid(0), contador(0) {};
+    };
 
-    int pid;
-   // bool corriendo;
-   // bool bloqueado;
-    enum Estado estado;
-   // tarea(int id): pid(id), bloqueado(false) {}; 
-    tarea(int id): pid(id), estado(LISTA) {}; 
-
-  };
-
-  struct Cpu {
-    int quantum;
-    int contador;
-    Cpu(int q): quantum(q), contador(0) {};
-  };
-
-    vector<tarea> cola; 
+    queue<int> tareasACorrer;
+    vector<int> tareasBloqueadas;
     vector<Cpu> cores;
-    int idActual;
 
 };
 
