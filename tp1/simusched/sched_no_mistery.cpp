@@ -6,11 +6,11 @@
 
 SchedNoMistery::SchedNoMistery(vector<int> argn) {  
   int argSize = argn.size();
-  //misteryQueue m(1);
-  //this->colas.push_back(m);
+  misteryQueue m(1);
+  this->colas.push_back(m);
 
-  for (int i = 0; i < argSize; i++) {
-    cout << "Argumento: " << i << " es : " << argn[i] << endl; 
+  for (int i = 1; i < argSize; i++) {
+//    cout << "Argumento: " << i << " es : " << argn[i] << endl; 
     misteryQueue mq(argn[i]);
     this->colas.push_back(mq);
   }
@@ -84,16 +84,16 @@ int SchedNoMistery::tick(int cpu, const enum Motivo m) {
 //en tick tengo que actualizar colaActual
   if (m == TICK) {
     if (curr_pid == IDLE_TASK) { 
-      cout << "hare" << endl;
+  //    cout << "hare" << endl;
       next_pid = this->proxIdDisponible();
     } else {
       colas[colaActual].contador++;
       if (colas[colaActual].contador == colas[colaActual].quantum) {
-      cout << "hare2" << endl;
+    //  cout << "hare2" << endl;
         next_pid = finalizoQuantum();
         colas[colaActual].contador = 0;
       } else {
-      cout << "hare3" << endl;
+     // cout << "hare3" << endl;
         next_pid = curr_pid;
       }
     }
