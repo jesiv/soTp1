@@ -13,15 +13,18 @@ class SchedNoMistery : public SchedBase {
     virtual int tick(int cpu, const enum Motivo m);  
 
   private:
-    typedef struct misteryQueue{ 
+    typedef struct misteryQueue { 
       int quantum;
+      int contador;
       queue cola;
       misteryQueue(int q) : quantum(q), cola() {};
     } misteryQueue;
 
+    int tareaCorriendo;
     vector<misteryQueue> colas;
     int colaActual;
     vector<int> bloqueados;
+    
 };
 
 #endif
