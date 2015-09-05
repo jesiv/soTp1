@@ -3,14 +3,14 @@
 #include "sched_no_mistery.h"
 #include "basesched.h"
 
-using namespace std;
 
 SchedNoMistery::SchedNoMistery(vector<int> argn) {  
   int argSize = argn.size();
-  misteryQueue m(1);
-  this->colas.push_back(m);
+  //misteryQueue m(1);
+  //this->colas.push_back(m);
 
   for (int i = 0; i < argSize; i++) {
+    cout << "Argumento: " << i << " es : " << argn[i] << endl; 
     misteryQueue mq(argn[i]);
     this->colas.push_back(mq);
   }
@@ -67,7 +67,12 @@ int SchedNoMistery::proxIdDisponible() {
 }
 
 int SchedNoMistery::finalizoQuantum(){ 
-  this->colas[colaActual+1].cola.push(tareaCorriendo); // Lo meto al fondo de la siguiente 
+  int tam = this->colas.size() - 1;
+  if (this->colaActual != tam) {
+    this->colas[colaActual+1].cola.push(tareaCorriendo); // Lo meto al fondo de la siguiente 
+  } else {
+    this->colas[colaActual].cola.push(tareaCorriendo);
+  }
   this->tareaCorriendo = proxIdDisponible();
 
   return tareaCorriendo; 
@@ -79,13 +84,16 @@ int SchedNoMistery::tick(int cpu, const enum Motivo m) {
 //en tick tengo que actualizar colaActual
   if (m == TICK) {
     if (curr_pid == IDLE_TASK) { 
+      cout << "hare" << endl;
       next_pid = this->proxIdDisponible();
     } else {
       colas[colaActual].contador++;
       if (colas[colaActual].contador == colas[colaActual].quantum) {
+      cout << "hare2" << endl;
         next_pid = finalizoQuantum();
         colas[colaActual].contador = 0;
       } else {
+      cout << "hare3" << endl;
         next_pid = curr_pid;
       }
     }
