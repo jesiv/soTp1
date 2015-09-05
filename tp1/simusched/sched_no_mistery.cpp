@@ -43,8 +43,8 @@ void SchedNoMistery::unblock(int pid) {
 int SchedNoMistery::proxCola() {
   int res = -1; //todas las colas estan vacias
   bool encontre = false;
-  for (int i = 0; i < colas.size(); i++) {
-    if (colas[i].size() > 0 && !encontre) {
+  for (unsigned int i = 0; i < colas.size(); i++) {
+    if (colas[i].cola.size() > 0 && !encontre) {
       res = i;
       encontre = true;
     }
@@ -54,10 +54,11 @@ int SchedNoMistery::proxCola() {
 
 int SchedNoMistery::proxIdDisponible() {
   int proxC = proxCola();
+  int res;
   if (proxC == -1) {
     res = IDLE_TASK;
   } else {
-  int res = colas[proxC].cola.front();
+  res = colas[proxC].cola.front();
   this->colas[proxC].cola.pop();
   this->tareaCorriendo = res;
   this->colaActual = proxC;
@@ -65,8 +66,8 @@ int SchedNoMistery::proxIdDisponible() {
   return res;
 }
 
-int SchedRR::finalizoQuantum(int cpu){ 
-  this->colas[colaActual+1].push(tareaCorriendo); // Lo meto al fondo de la siguiente 
+int SchedNoMistery::finalizoQuantum(){ 
+  this->colas[colaActual+1].cola.push(tareaCorriendo); // Lo meto al fondo de la siguiente 
   this->tareaCorriendo = proxIdDisponible();
 
   return tareaCorriendo; 
@@ -81,8 +82,8 @@ int SchedNoMistery::tick(int cpu, const enum Motivo m) {
       next_pid = this->proxIdDisponible();
     } else {
       colas[colaActual].contador++;
-      if (cores[colaActual].contador == cores[colaActual].quantum) {
-        next_pid = finalizoQuantum(cpu);
+      if (colas[colaActual].contador == colas[colaActual].quantum) {
+        next_pid = finalizoQuantum();
         colas[colaActual].contador = 0;
       } else {
         next_pid = curr_pid;
@@ -91,16 +92,16 @@ int SchedNoMistery::tick(int cpu, const enum Motivo m) {
   }
 
   if (m == BLOCK) {
-    int bloq = this->colas[colaActual].front();
-    this->colas[colaActual].pop()
-    this->tareasBloqueadas.push_back(bloq);
+    int bloq = this->colas[colaActual].cola.front();
+    this->colas[colaActual].cola.pop();
+    this->bloqueados.push_back(bloq);
     colas[colaActual].contador = 0;
     next_pid = this->proxIdDisponible();
   }
 
   if (m == EXIT) {
     next_pid = this->proxIdDisponible();
-    this->cores[colaActual].contador = 0;
+    this->colas[colaActual].contador = 0;
   }
 
   //cout << "next_pid : " << next_pid << endl;

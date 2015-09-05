@@ -5,6 +5,8 @@
 #include <queue>
 #include "basesched.h"
 
+using namespace std;
+
 class SchedNoMistery : public SchedBase {
   public:
     SchedNoMistery(std::vector<int> argn);
@@ -13,17 +15,25 @@ class SchedNoMistery : public SchedBase {
     virtual int tick(int cpu, const enum Motivo m);  
 
   private:
-    typedef struct misteryQueue { 
+
+    int encontrarBloqueado(int);
+    int proxCola();
+    int proxIdDisponible();
+    int finalizoQuantum();
+
+    struct misteryQueue { 
       int quantum;
       int contador;
-      queue cola;
-      misteryQueue(int q) : quantum(q), cola() {};
-    } misteryQueue;
+      queue<int> cola;
+      misteryQueue(int q) : quantum(q){};
+    };
+
 
     int tareaCorriendo;
     vector<misteryQueue> colas;
     int colaActual;
     vector<int> bloqueados;
+
     
 };
 
