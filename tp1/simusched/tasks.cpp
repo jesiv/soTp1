@@ -18,6 +18,18 @@ void TaskAlterno(int pid, vector<int> params) { // params: ms_pid, ms_io, ms_pid
 	}
 }
 
+void TaskRR(int pid, vector<int> params) { // params: ms_pid, ms_io, ms_pid, ...
+	uso_CPU(pid,1); 
+  uso_IO(pid,16); 
+  uso_CPU(pid, 16);
+}
+
+void TaskRR2(int pid, vector<int> params) { // params: ms_pid, ms_io, ms_pid, ...
+	uso_CPU(pid,4); 
+  uso_IO(pid,15); 
+  uso_CPU(pid, 16);
+}
+
 int generate(unsigned int *seed, int bmin, int bmax){
   int distancia = bmax - bmin + 1;
   int valor = rand_r(seed);
@@ -113,5 +125,7 @@ void tasks_init(void) {
 	register_task(TaskInternet, 1);
   //Ejercicio 3
   register_task(TaskBatch, 2);
+  register_task(TaskRR, 0);
+  register_task(TaskRR2, 0);
 
 }

@@ -24,6 +24,7 @@ void SchedRR::load(int pid) {
 void SchedRR::unblock(int pid) {
   int pos = encontrarPos(pid);
   int sig = this->tareasBloqueadas[pos];
+  this->tareasBloqueadas.erase(this->tareasBloqueadas.begin()+pos);
   this->tareasACorrer.push(sig);
 }
 
@@ -72,7 +73,7 @@ int SchedRR::tick(int cpu, const enum Motivo m) {
 //  cout << "curr_pid : " << curr_pid << "cpu : " << cpu << " cpu : " << cpu << " motivo : " << m << endl; 
 
   if (m == TICK) {
-    if (curr_pid == IDLE_TASK && cpusVacios()) {
+    if (curr_pid == IDLE_TASK) { //&& cpusVacios()) {
     // cout << "aaaaaaaaaaaaaaaaaaaaaaahola  " << endl;
       next_pid = this->proxIdDisponible(cpu);
     } else {

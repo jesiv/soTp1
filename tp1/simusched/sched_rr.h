@@ -7,8 +7,6 @@
 
 using namespace std;
 
-enum Estado {CORRIENDO, LISTA, BLOQUEADA};
-
 class SchedRR : public SchedBase {
 	public:
 		SchedRR(std::vector<int> argn);
