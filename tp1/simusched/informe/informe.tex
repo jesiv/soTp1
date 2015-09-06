@@ -1,0 +1,99 @@
+%\documentclass[spanish,a4paper]{article}
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper,margin=6em]{geometry}
+\usepackage[spanish]{babel}
+
+% Paquetes generales
+\usepackage{amsmath}
+\usepackage[utf8]{inputenc}%esto permite meter tildes sin el coso
+\usepackage[spanish]{babel}
+\usepackage{ifthen}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{multicol}
+\usepackage[absolute]{textpos}
+\usepackage{hyperref}
+\usepackage{enumitem}
+%\usepackage{graphicx}
+\usepackage{caratula}
+\usepackage{float}%este es el que acomoda bien las figures
+
+\newcommand{\linea}{\noindent\rule{12cm}{0.4pt}}
+
+%\include{caratula}
+\begin{document}
+
+
+\titulo{Trabajo Pr\'{a}ctico: Scheduling}
+\subtitulo{}
+
+\fecha{\today}
+
+\materia{Sistemas Operativos}
+\grupo{}
+
+\integrante{Arribas, Joaquín}{702/13}{joacoarribas@hotmail.com}
+\integrante{Lebrero, Ignacio}{702/13}{nachitou@hotmail.com}
+\integrante{Vázquez, Jésica}{702/13}{jesis\_93@hotmail.com}
+
+\maketitle
+
+\thispagestyle{empty}
+\vspace{3cm}
+\tableofcontents
+\newpage
+\vfill
+
+\begin{abstract}
+  En este trabajo se implementaron distintas simulaciones interactivas entre tareas. A su vez se implementaron distintas clases de scheduling para interactuar 
+  con las tareas creadas, y dichas interacciones se representaron de manera gráfica.
+
+  Hare que no se hablar.
+\end{abstract}
+
+\newpage
+
+\section{Ejercicio 1}
+
+El ejercicio consiste en implementar una tarea llamada \textbf{TaskConsola}, que simule una tarea que realiza llamadas bloqueantes. La tarea 
+recibe por parámetro la cantidad de llamadas bloqueantes que debe realizar, y un intervalo que determina un máximo y un mínimo para la duración 
+de cada una. Dicha duración es generada de manera pseudoaleatoria.
+
+Para resolver el ejercicio creamos una función llamada \textbf{generate} que se encarga de realizar la simulación de la tarea. Genera una $semilla$ utilizando la función 
+\textbf{time} y luego, para cada llamada bloqueante, genera el tiempo usando la función \textbf{rand\_r}. Para cada valor de la semilla 
+se genera un valor pseudoaleatorio al cual se lo fuerza a caer en el intervalo pasado por parametro, tomandole módulo la distancia entre el máximo y 
+el mínimo, y luego sumandole el mínimo. Una vez calculado el tiempo, se hace la llamada al uso del dispositivo de I/O.
+
+Ejemplo: 
+
+      \begin{figure}[H]
+        \includegraphics[scale=0.5]{ejercicio1}
+      \end{figure}
+
+El gráfico esta corriendo un lote de 4 tareas de tipo \textbf{TaskConsola}. El algoritmo de $scheduling$ utilizado para representar la interacción 
+entre las tareas es \textbf{First Come, First Served}. La cantidad de llamadas bloqueantes son 2 y el intervalo de 
+tiempo para cada llamada es entre 2 y 6. Podemos observar como efectivamente la duración de cada llamada bloqueante pertenece a ese 
+intervalo
+
+\newpage
+
+\section{Ejercicio 2}
+
+El ejercicio consiste en simular la situación que enfrenta nuestro querido amigo Rolando, el cual quiere correr un algoritmo a la vez que escucha 
+música y consume drogas. El algoritmo que corre hace un uso intensivo del cpu por 100 ciclos, mientras que la música y el internet realizan una 
+cantidad determinada de llamadas bloqueantes. La música realiza 20 y el internet 25, cada una de duración variable entre 2 y 4 ciclos. La manera 
+de generar la duración pseudoaleatoria de los ciclos de las llamadas bloqueantes fue la misma que la utilizada en el ejercicio previo, a través 
+de la funcion \textbf{generate}. El algoritmo de $scheduling$ utilizado para este ejercicio fue \textbf{First Come, First Served}.
+
+Ejemplos:
+
+  
+
+
+
+
+
+
+\end{document}
+

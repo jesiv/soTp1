@@ -24,7 +24,7 @@ void SchedNoMistery::load(int pid) {
 }
 
 int SchedNoMistery::encontrarBloqueado(int pid) { 
-  int res;
+  int res = 0;
   for (unsigned int i = 0 ; i < this->bloqueados.size() ; i++){
     if (this->bloqueados[i] == pid )
       res = i; 
@@ -35,8 +35,10 @@ int SchedNoMistery::encontrarBloqueado(int pid) {
 
 void SchedNoMistery::unblock(int pid) {  
   int pos = encontrarBloqueado(pid);
+  cout << "muero aca" << endl;
   int desBloq = this->bloqueados[pos];
   bloqueados.erase(bloqueados.begin()+pos);
+  cout << "muero aca213" << endl;
   colas[0].cola.push(desBloq);  //encolo pid desbloqueado a la cola de quantum 1
 }
 
@@ -70,12 +72,13 @@ int SchedNoMistery::finalizoQuantum(){
   int tam = this->colas.size() - 1;
   if (this->colaActual != tam) {
     this->colas[colaActual+1].cola.push(tareaCorriendo); // Lo meto al fondo de la siguiente 
+   // cout << "cola a insertar: " << colaActual+1 << endl;
+   // cout << "tareaActual: "<< tareaCorriendo << endl;
   } else {
     this->colas[colaActual].cola.push(tareaCorriendo);
   }
-  this->tareaCorriendo = proxIdDisponible();
 
-  return tareaCorriendo; 
+  return proxIdDisponible(); 
 }
 
 int SchedNoMistery::tick(int cpu, const enum Motivo m) {  
@@ -84,32 +87,40 @@ int SchedNoMistery::tick(int cpu, const enum Motivo m) {
 //en tick tengo que actualizar colaActual
   if (m == TICK) {
     if (curr_pid == IDLE_TASK) { 
-  //    cout << "hare" << endl;
+     // cout << "curr_pid = Idle" << endl;
       next_pid = this->proxIdDisponible();
+     // cout << "next_pid = " << next_pid << endl;
     } else {
       colas[colaActual].contador++;
       if (colas[colaActual].contador == colas[colaActual].quantum) {
-    //  cout << "hare2" << endl;
+      //  cout << "termino el quantum vieja" << endl;
         next_pid = finalizoQuantum();
+      //  cout << "next_pid = " << next_pid << endl;
         colas[colaActual].contador = 0;
       } else {
      // cout << "hare3" << endl;
+      //  cout << "NO termino el quantum vieja" << endl;
         next_pid = curr_pid;
+      //  cout << "next_pid = " << next_pid << endl;
       }
     }
   }
 
   if (m == BLOCK) {
-    int bloq = this->colas[colaActual].cola.front();
-    this->colas[colaActual].cola.pop();
-    this->bloqueados.push_back(bloq);
+    //cout << "Cola Actual : " << colaActual << endl;
+//    int bloq = this->colas[colaActual].cola.front();
+    //cout << "Primer elemento siguiente: " << colas[colaActual].cola.front() << endl;
+    //this->colas[colaActual].cola.pop();
+    this->bloqueados.push_back(curr_pid);
     colas[colaActual].contador = 0;
     next_pid = this->proxIdDisponible();
+    //cout << "Cola Actual : " << colaActual << endl;
+    //cout << "Primer elemento siguiente: " << next_pid << endl;
   }
 
   if (m == EXIT) {
-    next_pid = this->proxIdDisponible();
     this->colas[colaActual].contador = 0;
+    next_pid = this->proxIdDisponible();
   }
 
   //cout << "next_pid : " << next_pid << endl;
