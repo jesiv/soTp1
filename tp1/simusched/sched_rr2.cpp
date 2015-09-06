@@ -6,14 +6,17 @@ using namespace std;
 
 SchedRR2::SchedRR2(vector<int> argn) {
 	// Round robin recibe la cantidad de cores y sus cpu_quantum por parámetro
-  int cores = argn[1];
-  for (int i = 0 ; i < cores ; i++ ) {
+  int cantCores = argn[1];
+  queue<int> q;
+  vector<int> v;
+  for (int i = 0 ; i < cantCores ; i++ ) {
     Cpu c(argn[i+2]);
-    this->cores.push_back(c);
+    cores.push_back(c);
+  tareasBloqueadas.push_back(v);
+  tareasACorrerPorCPU.push_back(q);
+
   }
-  tareasBloqueadas.reserve(cores);
-  tareasACorrerPorCPU.reserve(cores);
-  cout << "cantidadde cores" << cores << endl;
+//  cout << "cantidadde cores" << cores << endl;
 }
 
 SchedRR2::~SchedRR2() {
