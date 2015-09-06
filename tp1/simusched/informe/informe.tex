@@ -37,7 +37,7 @@
 
 \integrante{Arribas, Joaquín}{702/13}{joacoarribas@hotmail.com}
 \integrante{Lebrero, Ignacio}{702/13}{nachitou@hotmail.com}
-\integrante{Vázquez, Jésica}{702/13}{jesis\_93@hotmail.com}
+\integrante{Vázquez, Jésica}{318/13}{jesis\_93@hotmail.com}
 
 \maketitle
 
@@ -64,8 +64,8 @@ de cada una. Dicha duración es generada de manera pseudoaleatoria.
 
 Para resolver el ejercicio creamos una función llamada \textbf{generate} que se encarga de realizar la simulación de la tarea. Genera una $semilla$ utilizando la función 
 \textbf{time} y luego, para cada llamada bloqueante, genera el tiempo usando la función \textbf{rand\_r}. Para cada valor de la semilla 
-se genera un valor pseudoaleatorio al cual se lo fuerza a caer en el intervalo pasado por parametro, tomandole módulo la distancia entre el máximo y 
-el mínimo, y luego sumandole el mínimo. Una vez calculado el tiempo, se hace la llamada al uso del dispositivo de I/O.
+se genera un valor pseudoaleatorio al cual se lo fuerza a caer en el intervalo pasado por parámetro, tomándole módulo la distancia entre el máximo y 
+el mínimo, y luego sumándole el mínimo. Una vez calculado el tiempo, se hace la llamada al uso del dispositivo de I/O.
 
 Ejemplo: 
 
@@ -73,7 +73,7 @@ Ejemplo:
         \includegraphics[scale=0.5]{ejercicio1}
       \end{figure}
 
-El gráfico esta corriendo un lote de 4 tareas de tipo \textbf{TaskConsola}. El algoritmo de $scheduling$ utilizado para representar la interacción 
+El gráfico muestra un lote de 4 tareas de tipo \textbf{TaskConsola}. El algoritmo de $scheduling$ utilizado para representar la interacción 
 entre las tareas es \textbf{First Come, First Served}. La cantidad de llamadas bloqueantes son 2 y el intervalo de 
 tiempo para cada llamada es entre 2 y 6. Podemos observar como efectivamente la duración de cada llamada bloqueante pertenece a ese 
 intervalo
@@ -83,8 +83,8 @@ intervalo
 \section{Ejercicio 2}
 
 El ejercicio consiste en simular la situación que enfrenta nuestro querido amigo Rolando, el cual quiere correr un algoritmo a la vez que escucha 
-música y consume drogas. El algoritmo que corre hace un uso intensivo del cpu por 100 ciclos, mientras que la música y el internet realizan una 
-cantidad determinada de llamadas bloqueantes. La música realiza 20 y el internet 25, cada una de duración variable entre 2 y 4 ciclos. La manera 
+música y consume drogas JAJAJAJAJAJAJAJAJA MUY BUENO.  El algoritmo que corre hace uso intensivo del cpu por 100 ciclos, mientras que la música e internet realizan una 
+cantidad determinada de llamadas bloqueantes. La música hace 20 e internet 25, cada una de duración variable entre 2 y 4 ciclos. La manera 
 de generar la duración pseudoaleatoria de los ciclos de las llamadas bloqueantes fue la misma que la utilizada en el ejercicio previo, a través 
 de la funcion \textbf{generate}. El algoritmo de $scheduling$ utilizado para este ejercicio fue \textbf{First Come, First Served}.
 
@@ -92,17 +92,17 @@ Ejemplos:
 
 \section{Ejercicio 4}
 
-En este ejercicio completamos la implentación del scheduler \textit{Round-Robin}. Éste consiste en asignarle un quantum determinado a cada tarea. Cada núcleo puede, o no, tener quantum distintos. 
+En este ejercicio completamos la implentación del scheduler \textit{Round-Robin}. Éste consiste en asignarle un quantum determinado a cada tarea e ir alternando el procesador entre las distintas tareas. Cada núcleo puede, o no, tener quantum distintos. 
 
 \subsection{Elección de estructuras}
 
-Para la implementación del scheduler utilizamos una cola con las tareas que están en estado LISTAS, y almacenamos en un vector aquellas que están BLOQUEADAS. Además, cada núcleo conoce cuál es la tarea que está CORRIENDO, y cuántos ciclos lleva, con lo cual, dado que tiene un quantum determinado, calcula en qué momento debe desalojarla y darle el procesador a la próxima tarea.
-Hay una única cola de tareas, en decir, se permite la migración de núcleos, ya que el scheduler desencola la primer tarea en estado LISTA y le asigna el núcleo que esté libre en ese momento. 
+Para la implementación del scheduler utilizamos una cola con las tareas que están en estado LISTAS, y almacenamos en un vector aquellas que están BLOQUEADAS. Además, cada núcleo conoce cuál es la tarea que está CORRIENDO, y cuántos ciclos lleva, con lo cual, dado que tiene un quantum determinado, calcula en qué momento debe desalojarla y darle el procesador a la siguiente tarea.
+Hay una única cola de tareas, en decir, se permite la migración de núcleos, ya que el scheduler desencola la primer tarea en estado LISTA y le asigna el núcleo que esté libre en ese momento sin importar en qué núcleo se ejecutó en ciclos anteriores. 
 
 \section{Ejercicio 5}
 
-En esta sección evaluaremos el rendimiento del scheduler \textit{Round-Robin} según el tiempo de latencia, el waiting-time (tiempo que el proceso está en estado READY), y el tiempo total de ejecución. Utilizaremos un lote de tareas con una de tipo \textbf{TaskCPU} de 50 ciclos, y dos \textbf{TaskConsola2} que hacen 5 llamadas bloqueantes, cada una de ella de duración de 3 ciclos. 
-Los cálculos de los cuadros están hechos sobre los datos de la simulación. \\
+En esta sección evaluaremos el rendimiento del scheduler \textit{Round-Robin} según el tiempo de latencia, el waiting-time (tiempo que el proceso está en estado READY), y el tiempo total de ejecución. Utilizaremos un lote de tareas con una de tipo \textbf{TaskCPU} de 50 ciclos, y dos \textbf{TaskConsola2} que hacen 5 llamadas bloqueantes, cada una de ellas de 3 ciclos de duración. 
+Los cálculos de los cuadros están hechos sobre los datos de la simulación y la unidad de medida es \textit{ciclo}. \\
 
 %./simusched tareaEj5.tsk 1 2 0 SchedRR 1 2 CON ESTE COMANDO GENERE LA IMAGEN, LO DEJO PAL MAKEFILE 
 
@@ -124,14 +124,14 @@ Los cálculos de los cuadros están hechos sobre los datos de la simulación. \\
 " " & Task0 & Task1 & Task2 \\
 \hline \hline
 Latencia & 2 & 6 & 9 \\ \hline
-Waiting Time & 50 & 41 & 44 \\ \hline
-Tiempo de Ejecución & 100 & 55 & 60 \\ \hline
+Waiting Time & 50 & 36 & 39 \\ \hline
+Tiempo de Ejecución & 101 & 57 & 60 \\ \hline
 \end{tabular}
 \caption{cálculos con quantum 2}
 %\end{center}
 \end{table}
 
-En este caso se observa que las 3 tarea tienen un tiempo de espera elevado con respecto al tiempo de ejecución total. La \textbf{Task0} espera durante el 50\% del tiempo, mientras que las \textbf{Task1} y \textbf{Task2} esperan aproximadamente 74,5\% y 73,3\% respectivamente. Por otro lado, la latencia de los procesos es baja con respecto a la cantidad de ciclos que le lleva terminar de ejecutarse. 
+En este caso se observa que las 3 tareas tienen un tiempo de espera elevado con respecto al tiempo de ejecución total. La \textbf{Task0} espera durante el 50\% del tiempo, mientras que las \textbf{Task1} y \textbf{Task2} esperan aproximadamente 74,5\% y 73,3\% respectivamente. Por otro lado, la latencia de los procesos es baja con respecto a la cantidad de ciclos que le lleva terminar de ejecutarse. 
 
 \item \textbf{Round-Robin con quantum 10}
 
@@ -149,7 +149,7 @@ En este caso se observa que las 3 tarea tienen un tiempo de espera elevado con r
 " " & Task0 & Task1 & Task2 \\
 \hline \hline
 Latencia & 2 & 14 & 17 \\ \hline
-Waiting Time & 42 & 80 & 83 \\ \hline
+Waiting Time & 42 & 75 & 78 \\ \hline
 Tiempo de Ejecución & 93 & 96 & 99 \\ \hline
 \end{tabular}
 \caption{cálculos con quantum 10}
@@ -174,12 +174,14 @@ Para el scheduler con quantum 10, se observa una mejora con respecto al tiempo d
 " " & Task0 & Task1 & Task2 \\
 \hline \hline
 Latencia & 2 & 54 & 57 \\ \hline
-Waiting Time & 10 & 72 & 75 \\ \hline
+Waiting Time & 10 & 67 & 70 \\ \hline
 Tiempo de Ejecución & 61 & 88 & 91 \\ \hline
 \end{tabular}
 \caption{cálculos con quantum 50}
 %\end{center}
 \end{table}
+
+TODOS ESTOS PORCENTAJES ESTAN MAL CAPAAAAAAAAAA
 
 En este caso, el porcentaje de tiempo de espera de la \textbf{Task 0} disminuye notablemente a un 16,4\%, y los tiempos de espera de las tareas restantes están alrededor de 82\%, porcentaje similar al caso del scheduler de quantum 10. Sin embargo, como en este caso se le asigna un quantum elevado a la primer tarea, el tiempo de latencia de las \textbf{Task 1} y \textbf{Task 2} ahora es de 54 y 57 ciclos respectivamente. 
 \end{enumerate}
@@ -189,11 +191,42 @@ HARE LOCO
 
 \section{Ejercicio 6}
 
+En esta sección analizaremos las diferencias entre los schedulers \textit{Round-Robin} y \textit{First Come First Serve}. Para esto, simulamos el comportamiento del scheduler \textit{FCFS} con el mismo lote de tareas del Ejercicio 5.
+
       \begin{figure}[H]
         \includegraphics[scale=0.5]{Ej6}
-        \caption{Simulación SchedFCFS quantum 2}
+        \caption{Simulación SchedFCFS}
       \end{figure}
 
+\subsection{Comparación entre \textit{SchedRR} y \textit{SchedFCFS}}
 
+El comportamiento del \textit{SchedRR} de quantum 50 para la \textbf{Task 0} es similar al del \textit{SchedFCFS} dado que se ejecuta durante los 50 ciclos de duración (ver figura 3). El primer scheduler la desaloja en el ciclo 51 (aumentando su waiting time dado que solo le faltaba ejecutar el EXIT), mientras que el otro la desaloja una vez que realizó el EXIT. Como puede observarse en las dos figuras, el tiempo de latencia es similar al igual que el tiempo total de ejecución. Sin embargo, el \textit{SchedRR} aprovecha el hecho de que una tarea esté bloqueada para darle procesador a la siguiente, como se ve en el ciclo 55 de la figura 3: la \textbf{Task 1} tenía el procesador, y, apenas se bloquea, el scheduler la desaloja y pone a correr la \textbf{Task 2} que comienza a ejecutar en el ciclo 57 dado que el costo de cambio de contexto es de 2 ciclos. \\
+
+En el \textit{SchedRR} de quantum 10, la \textbf{Task 0} tiene un tiempo de ejecución mayor que en el caso anterior, dado que, si no hay bloqueos, el scheduler le da el procesador a la siguiente tarea cada 10 ciclos. En este caso, esto no es ventajoso, dado que las \textbf{Task 1} y \textbf{Task 2} apenas empiezan a ejecutar, se bloquean, entonces la tarea 10 paga el costo de cambio de contexto al momento de volver a tener el procesador, pero las otras dos tareas ejecutaron solamente 1 ciclo (por ejemplo, en el ciclo 12 de la figura 2, la tarea 0 es desalojada, luego de 2 ciclos de costo de cambio de contexto, ejecuta la tarea 1 y se bloquea, entonces el scheduler le pasa el procesador a la tarea 2, que hace lo mismo que la 1, luego éste la desaloja, y la tarea 0 paga el costo de cambio de contexto para volver a ejecutar). Pablito clavo un clavito apesta esto \\
+
+Por último, el \textit{SchedRR} de quantum 2, YA NO SE QUE PONER ACA. 
+ 
+\subsection{Conclusión}
+
+El \textit{SchedRR} es más justo con respecto a la asignación de CPU. Aunque eventualmente el \textit{SchedFCFS} le da procesador a todas las tareas, una con muy pocos ciclos de ejecución podría esperar que termine otra que tiene una cantidad significativamente mayor de ejecución. En el primer scheduler, probablemente la tarea de tiempo de ejecución menor pueda terminar antes, sin tener que esperar que todas las demás hayan terminado de usar el procesador. Esto también se ve reflejado en la latencia, ya que en FCFS un proceso podría estar esperando una cantidad indefinida de tiempo (dependiendo del momento en el que se inicio, cuántos procesos hay en la cola y cuánto tiempo van a tardar) mientras que en RR va a tener una latencia razonable dependiendo del quantum del scheduler. Es por esto que el \textit{Turnaround} de cada proceso va a ser menor, ya que como se va alternando el uso de procesador, no van a tener que sumar todo el tiempo que estuvieron esperándolo.
+
+\section{Ejercicio 7}
+
+En esta sección experimentamos con el \textit{SchedMistery}, a continuación ejemplos de su comportamiento:
+
+\begin{enumerate}
+\item Pasar como parámentro al scheduler un $0$
+
+Esta simulación está hecha con el mismo lote de tareas del Ejercicio 5 (una \textbf{TaskCpu} de 50 ciclos y dos \textbf{TaskConsola2} que hacen 5 llamadas bloqueantes de 3 ciclos de duración). 
+Los valores pasados como parámetro fueron $5$ $4$ $0$ $4$.
+
+      \begin{figure}[H]
+        \includegraphics[scale=0.5]{Ej7Ej1bis}
+        \caption{Simulación SchedNoMistery con un 0 como parámetro} 
+      \end{figure}
+
+En este caso, observamos que 
+
+\end{enumerate}
 \end{document}
 
