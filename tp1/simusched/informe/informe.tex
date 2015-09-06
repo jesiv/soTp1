@@ -294,7 +294,7 @@ Ahora veamos el caso donde esto si sea conveniente, supongamos que tenemos un co
     \caption{Simulacion schedRR2 para mejor caso en Ejercicio8}
   \end{figure}
 
-
+Como podemos observar, los procesos se reparten en los dos cpus y corren intermitentemente, como nunca cambian de procesador no pagan el costo de hacerlo. veamos ahora que pasaria en un entorno $round robin$ comun.
 %./simusched tareaRR2MejorCaso.tsk 2 0 10 SchedRR 2 5 5 | ./graphsched.py > informe/Ej8MejorCasoRR.png
 
   \begin{figure}[H]
@@ -302,12 +302,19 @@ Ahora veamos el caso donde esto si sea conveniente, supongamos que tenemos un co
     \caption{Simulacion schedRR para mejor caso en Ejercicio8}
   \end{figure}
 
- 
+En este entorno los procesos intercambian cpus constantemente, con esto pagan siempre el costo de hacerlo por lo que demora enormemente que terminen de correr.
+%mas metricas, metricas everiwere
+
+Ahora veamos como correria en un contexto $FirstComeFirstServe$
+
 %./simusched tareaRR2MejorCaso.tsk 2 0 10 SchedFCFS 2 5 5 | ./graphsched.py > informe/Ej8MejorCasoFCFS.png
 
   \begin{figure}[H]
     \includegraphics[scale=0.5]{Ej8MejorCasoFCFS}
     \caption{Simulacion $First\ Come\ First\ Serve$ para mejor caso en Ejercicio8}
   \end{figure}
+
+En este caso no se paga nada adicional, ya que los procesos empiezan cuando se les da el procesador y no iniciara el proximo hasta que este no termine, por lo que nunca pagara el costo de intercambio de cpu. Por otro lado el costo total que tomara procesar todo sera muchisimo mayor, ya que cuando algun proceso se bloquee no habra posibilidad de poner otro a correr en el medio haciendo que el total de corrida de los procesos sea mucho mayor.
+
 \end{document}
 
