@@ -118,6 +118,18 @@ void TaskConsola2(int pid, vector<int> params){
   }  
   return;
 }
+//Ejercicio 7
+void TaskBloq(int pid, vector<int> params){
+  int n = params[0];
+  int cantCiclos = params[1];
+  uso_CPU(pid, 5);
+  for(int i = 0; i < n; i++){
+    uso_IO(pid, cantCiclos);    
+  }  
+  uso_CPU(pid, 20);
+
+  return;
+}
 
 void tasks_init(void) {
 	/* Todos los tipos de tareas se deben registrar acá para poder ser usadas.
@@ -138,5 +150,8 @@ void tasks_init(void) {
   register_task(TaskRR2, 0);
   //Ejercicio 5
   register_task(TaskConsola2, 2);
+  //Ejercicio 7
+  register_task(TaskBloq, 2);
+
 
 }
