@@ -24,16 +24,17 @@ SchedRR2::~SchedRR2() {
 }
 
 int SchedRR2::encontrarNucleo() {
-  int min = -1;   
-  int res;
-  int aux;
-  for (unsigned int i = 0; i < tareasACorrerPorCPU.size(); i++) {
+  int res = 0;
+  int aux = tareasACorrerPorCPU[0].size() + tareasBloqueadas[0].size();
+  int min = aux;   
+  for (unsigned int i = 1; i < tareasACorrerPorCPU.size(); i++) {
     aux = tareasACorrerPorCPU[i].size() + tareasBloqueadas[i].size();
-    if ( aux > min) {
+    if ( aux < min) {
       min = aux;
       res = i;  
     }    
   }
+   cout << "el nucleo elegido es: HAAAAAAAAAAAAAAREEEEEEEE" << res << endl; 
   return res;
 }
 
