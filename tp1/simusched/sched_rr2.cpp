@@ -7,16 +7,17 @@ using namespace std;
 SchedRR2::SchedRR2(vector<int> argn) {
 	// Round robin recibe la cantidad de cores y sus cpu_quantum por parámetro
   int cantCores = argn[1];
+  cout << "cantidad de cores " << cantCores << endl;
   queue<int> q;
   vector<int> v;
   for (int i = 0 ; i < cantCores ; i++ ) {
     Cpu c(argn[i+2]);
     cores.push_back(c);
-  tareasBloqueadas.push_back(v);
-  tareasACorrerPorCPU.push_back(q);
-
+    tareasBloqueadas.push_back(v);
+    tareasACorrerPorCPU.push_back(q);
   }
-//  cout << "cantidadde cores" << cores << endl;
+  cout << "longitud de tareasACorrer" << tareasACorrerPorCPU.size() << endl;
+  cout << "longitud de tareasBloqueeadad" << tareasBloqueadas.size() << endl;
 }
 
 SchedRR2::~SchedRR2() {
@@ -25,9 +26,19 @@ SchedRR2::~SchedRR2() {
 
 int SchedRR2::encontrarNucleo() {
   int res = 0;
+//  int hare;
+//  if (cores[0].pid == -1)
+//    hare = 0;
+//  if (cores[0].pid != -1)
+//    hare = 1;
+
   int aux = tareasACorrerPorCPU[0].size() + tareasBloqueadas[0].size();
   int min = aux;   
   for (unsigned int i = 1; i < tareasACorrerPorCPU.size(); i++) {
+ // if (cores[0].pid == -1)
+ //   hare = 0;
+ // if (cores[0].pid != -1)
+ //   hare = 1;
     aux = tareasACorrerPorCPU[i].size() + tareasBloqueadas[i].size();
     if ( aux < min) {
       min = aux;
@@ -100,7 +111,7 @@ int SchedRR2::tick(int cpu, const enum Motivo m) {
       next_pid = proxIdDisponible(cpu);
     } else {
       cores[cpu].contador++;
-      if (cores[cpu].contador == cores[cpu].quantum) {
+      if (cores[cpu].contador == cores[cpu].quantum) { //si termino el quantum y no mando EXIT, seguro que queda al menos una tarea en la cola de tareaACorrer
         next_pid = finalizoQuantum(cpu);
         cores[cpu].contador = 0;
       } else {

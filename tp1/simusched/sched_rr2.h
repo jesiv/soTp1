@@ -26,11 +26,11 @@ class SchedRR2 : public SchedBase {
       int quantum;
       int pid;
       int contador;
-      Cpu(int q): quantum(q), pid(0), contador(0) {};
+      Cpu(int q): quantum(q), pid(-1), contador(0) {};
     };
 
-    vector<queue<int> > tareasACorrerPorCPU;
-    vector<vector<int> > tareasBloqueadas;
+    vector<queue<int> >  tareasACorrerPorCPU ;
+    vector<vector<int> > tareasBloqueadas ;
     vector<Cpu> cores;
 
 };

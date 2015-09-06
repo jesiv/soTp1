@@ -1,4 +1,5 @@
 %\documentclass[spanish,a4paper]{article}
+%\documentclass[a4paper,openright,11pt]{report}
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[a4paper,margin=6em]{geometry}
@@ -12,6 +13,7 @@
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{multicol}
+\usepackage{multirow}
 \usepackage[absolute]{textpos}
 \usepackage{hyperref}
 \usepackage{enumitem}
@@ -88,11 +90,109 @@ de la funcion \textbf{generate}. El algoritmo de $scheduling$ utilizado para est
 
 Ejemplos:
 
-  
+\section{Ejercicio 4}
 
+En este ejercicio completamos la implentación del scheduler \textit{Round-Robin}. Éste consiste en asignarle un quantum determinado a cada tarea. Cada núcleo puede, o no, tener quantum distintos. 
 
+\subsection{Elección de estructuras}
 
+Para la implementación del scheduler utilizamos una cola con las tareas que están en estado LISTAS, y almacenamos en un vector aquellas que están BLOQUEADAS. Además, cada núcleo conoce cuál es la tarea que está CORRIENDO, y cuántos ciclos lleva, con lo cual, dado que tiene un quantum determinado, calcula en qué momento debe desalojarla y darle el procesador a la próxima tarea.
+Hay una única cola de tareas, en decir, se permite la migración de núcleos, ya que el scheduler desencola la primer tarea en estado LISTA y le asigna el núcleo que esté libre en ese momento. 
 
+\section{Ejercicio 5}
+
+En esta sección evaluaremos el rendimiento del scheduler \textit{Round-Robin} según el tiempo de latencia, el waiting-time (tiempo que el proceso está en estado READY), y el tiempo total de ejecución. Utilizaremos un lote de tareas con una de tipo \textbf{TaskCPU} de 50 ciclos, y dos \textbf{TaskConsola2} que hacen 5 llamadas bloqueantes, cada una de ella de duración de 3 ciclos. 
+Los cálculos de los cuadros están hechos sobre los datos de la simulación. \\
+
+%./simusched tareaEj5.tsk 1 2 0 SchedRR 1 2 CON ESTE COMANDO GENERE LA IMAGEN, LO DEJO PAL MAKEFILE 
+
+\subsection{Análisis de \textit{Round-Robin} para distintos quantum}
+\begin{enumerate}
+\item \textbf{Round-Robin con quantum 2}
+
+      \begin{figure}[H]
+        \includegraphics[scale=0.5]{Ej5q2}
+        \caption{Simulación SchedRR quantum 2}
+      \end{figure}
+
+%TABLA PARA QUANTUM 2
+\begin{table}[htb]
+%\begin{center}
+\centering
+\begin{tabular}{| l | l | l | l |}
+\hline
+" " & Task0 & Task1 & Task2 \\
+\hline \hline
+Latencia & 2 & 6 & 9 \\ \hline
+Waiting Time & 50 & 41 & 44 \\ \hline
+Tiempo de Ejecución & 100 & 55 & 60 \\ \hline
+\end{tabular}
+\caption{cálculos con quantum 2}
+%\end{center}
+\end{table}
+
+En este caso se observa que las 3 tarea tienen un tiempo de espera elevado con respecto al tiempo de ejecución total. La \textbf{Task0} espera durante el 50\% del tiempo, mientras que las \textbf{Task1} y \textbf{Task2} esperan aproximadamente 74,5\% y 73,3\% respectivamente. Por otro lado, la latencia de los procesos es baja con respecto a la cantidad de ciclos que le lleva terminar de ejecutarse. 
+
+\item \textbf{Round-Robin con quantum 10}
+
+      \begin{figure}[H]
+        \includegraphics[scale=0.5]{Ej5q10}
+        \caption{Simulación SchedRR quantum 10}
+      \end{figure}
+
+%TABLA PARA QUANTUM 10
+\begin{table}[htb]
+%\begin{center}
+\centering
+\begin{tabular}{| l | l | l | l |}
+\hline
+" " & Task0 & Task1 & Task2 \\
+\hline \hline
+Latencia & 2 & 14 & 17 \\ \hline
+Waiting Time & 42 & 80 & 83 \\ \hline
+Tiempo de Ejecución & 93 & 96 & 99 \\ \hline
+\end{tabular}
+\caption{cálculos con quantum 10}
+%\end{center}
+\end{table}
+
+Para el scheduler con quantum 10, se observa una mejora con respecto al tiempo de espera de la \textbf{Task 0}, disminuyendo el porcentaje a aproximadamente el 45,2\%, sin embargo, las otras dos tareas elevaron su tiempo de espera a alrededor del 83\%. Al igual que en el caso anterior, la latencia continúa siendo relativamente baja.
+
+\item \textbf{Round-Robin con quantum 50}
+
+      \begin{figure}[H]
+        \includegraphics[scale=0.5]{Ej5q50}
+        \caption{Simulación SchedRR quantum 50}
+      \end{figure}
+
+%TABLA PARA QUANTUM 50
+\begin{table}[htb]
+%\begin{center}
+\centering
+\begin{tabular}{| l | l | l | l |}
+\hline
+" " & Task0 & Task1 & Task2 \\
+\hline \hline
+Latencia & 2 & 54 & 57 \\ \hline
+Waiting Time & 10 & 72 & 75 \\ \hline
+Tiempo de Ejecución & 61 & 88 & 91 \\ \hline
+\end{tabular}
+\caption{cálculos con quantum 50}
+%\end{center}
+\end{table}
+
+En este caso, el porcentaje de tiempo de espera de la \textbf{Task 0} disminuye notablemente a un 16,4\%, y los tiempos de espera de las tareas restantes están alrededor de 82\%, porcentaje similar al caso del scheduler de quantum 10. Sin embargo, como en este caso se le asigna un quantum elevado a la primer tarea, el tiempo de latencia de las \textbf{Task 1} y \textbf{Task 2} ahora es de 54 y 57 ciclos respectivamente. 
+\end{enumerate}
+
+\subsection{Conclusión}
+HARE LOCO
+
+\section{Ejercicio 6}
+
+      \begin{figure}[H]
+        \includegraphics[scale=0.5]{Ej6}
+        \caption{Simulación SchedFCFS quantum 2}
+      \end{figure}
 
 
 \end{document}

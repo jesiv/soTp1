@@ -109,6 +109,15 @@ void TaskBatch(int pid, vector<int> params) {
     }
   }
 }
+//Ejercicio 5
+void TaskConsola2(int pid, vector<int> params){
+  int n = params[0];
+  int cantCiclos = params[1];
+  for(int i = 0; i < n; i++){
+    uso_IO(pid, cantCiclos);    
+  }  
+  return;
+}
 
 void tasks_init(void) {
 	/* Todos los tipos de tareas se deben registrar acá para poder ser usadas.
@@ -127,5 +136,7 @@ void tasks_init(void) {
   register_task(TaskBatch, 2);
   register_task(TaskRR, 0);
   register_task(TaskRR2, 0);
+  //Ejercicio 5
+  register_task(TaskConsola2, 2);
 
 }
