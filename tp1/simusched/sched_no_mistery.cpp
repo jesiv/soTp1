@@ -15,6 +15,7 @@ SchedNoMistery::SchedNoMistery(vector<int> argn) {
     this->colas.push_back(mq);
   }
   this->colaActual = 0;
+  this->tareaCorriendo = 0;
 }
 
 
@@ -35,10 +36,8 @@ int SchedNoMistery::encontrarBloqueado(int pid) {
 
 void SchedNoMistery::unblock(int pid) {  
   int pos = encontrarBloqueado(pid);
-  cout << "muero aca" << endl;
   int desBloq = this->bloqueados[pos];
   bloqueados.erase(bloqueados.begin()+pos);
-  cout << "muero aca213" << endl;
   colas[0].cola.push(desBloq);  //encolo pid desbloqueado a la cola de quantum 1
 }
 
@@ -68,14 +67,14 @@ int SchedNoMistery::proxIdDisponible() {
   return res;
 }
 
-int SchedNoMistery::finalizoQuantum(){ 
+int SchedNoMistery::finalizoQuantum(int pid){ 
   int tam = this->colas.size() - 1;
   if (this->colaActual != tam) {
-    this->colas[colaActual+1].cola.push(tareaCorriendo); // Lo meto al fondo de la siguiente 
+    this->colas[colaActual+1].cola.push(pid); // Lo meto al fondo de la siguiente 
    // cout << "cola a insertar: " << colaActual+1 << endl;
    // cout << "tareaActual: "<< tareaCorriendo << endl;
   } else {
-    this->colas[colaActual].cola.push(tareaCorriendo);
+    this->colas[colaActual].cola.push(pid);
   }
 
   return proxIdDisponible(); 
@@ -92,11 +91,13 @@ int SchedNoMistery::tick(int cpu, const enum Motivo m) {
      // cout << "next_pid = " << next_pid << endl;
     } else {
       colas[colaActual].contador++;
+     // cout << "cola a: " << colaActual << "cola contador: " << colas[colaActual].contador << "cola quantum: " << colas[colaActual].quantum << endl;
+
       if (colas[colaActual].contador == colas[colaActual].quantum) {
       //  cout << "termino el quantum vieja" << endl;
-        next_pid = finalizoQuantum();
-      //  cout << "next_pid = " << next_pid << endl;
         colas[colaActual].contador = 0;
+        next_pid = finalizoQuantum(curr_pid);
+      //  cout << "next_pid = " << next_pid << endl;
       } else {
      // cout << "hare3" << endl;
       //  cout << "NO termino el quantum vieja" << endl;

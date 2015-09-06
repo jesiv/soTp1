@@ -20,13 +20,13 @@ class SchedNoMistery : public SchedBase {
     int encontrarBloqueado(int);
     int proxCola();
     int proxIdDisponible();
-    int finalizoQuantum();
+    int finalizoQuantum(int);
 
     struct misteryQueue { 
       int quantum;
       int contador;
       queue<int> cola;
-      misteryQueue(int q) : quantum(q){};
+      misteryQueue(int q) : quantum(q), contador(0){};
     };
 
 
