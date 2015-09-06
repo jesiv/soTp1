@@ -288,15 +288,69 @@ corren por 4 ciclos (1 más 3). La tarea 1, como fue bloqueada cuando estaba por
 
 \subsection{Ejercicio 8}
 En este ejercicio implementamos un shceduler $Roud Robin$ con la propiedad de que no permite migracion de procesos entre cpus, a continuacion se analizara su performance en comparacion con $Round Robin(hood)$ implementado en el ejercicio 4. \\
-Para la primera prueba lanzamos una tarea igual a la del $ejercicio2$ con la diferencia que lanza $taskRolando$ una vez mas al final, de esta manera tendremos 4 procesos, los cuales corren en 2 cpu. \\
 
-      \begin{figure}[H]
-        \includegraphics[scale=0.5]{Ej8RR2Prueba2}
-        \caption{Simulacion schedRR2 para TareaRRTests2} 
-      \end{figure}
+Veamos cuando esto no es conveniente, supongamos que tenemos un varios cpus y uno de ello posee quantum grande, entonces si alguna tarea que no bloquee cae sobre ese cpu, las tareas que corran sobre el y contengan bloqueos se veran afectadas, ya que no usaran todo su quantum y luego de haber terminado el periodo de bloqueo deberan esperar probablemente un gran periodo de tiempo hasta poder volver a correr, veamos un ejemplo: 
 
-Veamos algunas estadisticas:
-	
- 
+Para este ejemplo se utilizaron $TaskRolando$ y $TaskConsola$ para simular las llamadas a CPU intensivas y los bloqueos constantes sobre el primer CPU y sobre el segundo simplemente se corrio una tarea rolando.
+%./simusched tareaRR2PeorCaso.tsk 2 0 0 SchedRR2 2 1 1 | ./graphsched.py > informe/Ej8PeorCaso.png
+
+  \begin{figure}[H]
+    \includegraphics[scale=0.5]{Ej8PeorCaso}
+    \caption{Simulacion schedRR2 para peor caso en Ejercicio8}
+  \end{figure}
+
+A simple vista se puede sobservar que el cpu 1 pasa la mayor parte de su tiempo en idle esperando que la tarea que corre se desbloquee. 
+
+A continuacion veremos como hubiera corrido si hubieramos usado el scheduler del ejercicio 4
+
+%./simusched tareaRR2PeorCaso.tsk 2 0 0 SchedRR 2 31 2 | ./graphsched.py > informe/Ej8PeorCasoRR.png
+  \begin{figure}[H]
+    \includegraphics[scale=0.5]{Ej8PeorCasoRR}
+    \caption{Simulacion schedRR para peor caso en Ejercicio8}
+  \end{figure}
+
+Finalmente, veremos como funcionaria bajo $First Come First Serve$
+
+%./simusched tareaRR2PeorCaso.tsk 2 0 0 SchedFCFS 2 31 2 | ./graphsched.py > informe/Ej8PeorCasoFCFS.png
+  \begin{figure}[H]
+    \includegraphics[scale=0.5]{Ej8PeorCasoFCFS}
+    \caption{Simulacion $Fist Come First Serve$ para peor caso en Ejercicio8}
+  \end{figure}
+
+Comparando los resultados, se puede observar que utilizando $FCFS$ cuesta casi lo mismo que no permitir que los procesos cambien de CPU.
+
+%Faltan metricas wachin!!
+
+Ahora veamos el caso donde esto si sea conveniente, supongamos que tenemos un costo elevado para cambiar el proceso de nucleo, tenemos muchos procesos y cada CPU tiene poco quantum. En este caso se espera que los procesos sean intercambiados entre si muchas, de esta manera no esperaran demasiado y podran ir ejecutando de a poco. veamos un ejemplo:
+
+%./simusched tareaRR2MejorCaso.tsk 2 0 10 SchedRR2 2 5 5 | ./graphsched.py > informe/Ej8MejorCasoRR2.png
+
+  \begin{figure}[H]
+    \includegraphics[scale=0.5]{Ej8MejorCasoRR2}
+    \caption{Simulacion schedRR2 para mejor caso en Ejercicio8}
+  \end{figure}
+
+Como podemos observar, los procesos se reparten en los dos cpus y corren intermitentemente, como nunca cambian de procesador no pagan el costo de hacerlo. veamos ahora que pasaria en un entorno $round robin$ comun.
+%./simusched tareaRR2MejorCaso.tsk 2 0 10 SchedRR 2 5 5 | ./graphsched.py > informe/Ej8MejorCasoRR.png
+
+  \begin{figure}[H]
+    \includegraphics[scale=0.5]{Ej8MejorCasoRR}
+    \caption{Simulacion schedRR para mejor caso en Ejercicio8}
+  \end{figure}
+
+En este entorno los procesos intercambian cpus constantemente, con esto pagan siempre el costo de hacerlo por lo que demora enormemente que terminen de correr.
+%mas metricas, metricas everiwere
+
+Ahora veamos como correria en un contexto $FirstComeFirstServe$
+
+%./simusched tareaRR2MejorCaso.tsk 2 0 10 SchedFCFS 2 5 5 | ./graphsched.py > informe/Ej8MejorCasoFCFS.png
+
+  \begin{figure}[H]
+    \includegraphics[scale=0.5]{Ej8MejorCasoFCFS}
+    \caption{Simulacion $First\ Come\ First\ Serve$ para mejor caso en Ejercicio8}
+  \end{figure}
+
+En este caso no se paga nada adicional, ya que los procesos empiezan cuando se les da el procesador y no iniciara el proximo hasta que este no termine, por lo que nunca pagara el costo de intercambio de cpu. Por otro lado el costo total que tomara procesar todo sera muchisimo mayor, ya que cuando algun proceso se bloquee no habra posibilidad de poner otro a correr en el medio haciendo que el total de corrida de los procesos sea mucho mayor.
+
 \end{document}
 
