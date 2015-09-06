@@ -90,6 +90,10 @@ de la funcion \textbf{generate}. El algoritmo de $scheduling$ utilizado para est
 
 Ejemplos:
 
+\section{Ejercicio 3}
+
+\newpage 
+
 \section{Ejercicio 4}
 
 En este ejercicio completamos la implentación del scheduler \textit{Round-Robin}. Éste consiste en asignarle un quantum determinado a cada tarea. Cada núcleo puede, o no, tener quantum distintos. 
@@ -98,6 +102,8 @@ En este ejercicio completamos la implentación del scheduler \textit{Round-Robin
 
 Para la implementación del scheduler utilizamos una cola con las tareas que están en estado LISTAS, y almacenamos en un vector aquellas que están BLOQUEADAS. Además, cada núcleo conoce cuál es la tarea que está CORRIENDO, y cuántos ciclos lleva, con lo cual, dado que tiene un quantum determinado, calcula en qué momento debe desalojarla y darle el procesador a la próxima tarea.
 Hay una única cola de tareas, en decir, se permite la migración de núcleos, ya que el scheduler desencola la primer tarea en estado LISTA y le asigna el núcleo que esté libre en ese momento. 
+
+\newpage
 
 \section{Ejercicio 5}
 
@@ -186,6 +192,8 @@ En este caso, el porcentaje de tiempo de espera de la \textbf{Task 0} disminuye 
 
 \subsection{Conclusión}
 HARE LOCO
+
+\newpage
 
 \section{Ejercicio 6}
 
