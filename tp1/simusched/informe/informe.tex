@@ -220,10 +220,42 @@ El \textit{SchedRR} es más justo con respecto a la asignación de CPU. Aunque e
 
 \section{Ejercicio 7}
 
-En esta sección experimentamos con el \textit{SchedMistery}, a continuación ejemplos de su comportamiento:
+El ejercicio consiste en revelar el extraño comportamiento de un scheduler llamado \textbf{SchedMistery}. Para poder estudiar su comportamiento 
+lo que hicimos fue correr varias veces el simulador utilizando distintos lotes de tareas y a su vez, pasandole distintos parámetros.
+Utilizamos lotes de tareas simples, que solo utilizan el cpu, y lotes de tareas que contienen llamadas bloqueantes.
+Por consigna, sabemos que el scheduler tiene la capacidad de ser utilizado para un sole core.
 
-\begin{enumerate}
-\item \textbf{Pasar como parámentro al scheduler un $0$}
+Nos dimos cuenta de las siguientes características:
+\begin{itemize}
+  \item El scheduler utiliza una especie de \textbf{Round Robin}, donde en cada iteración del scheduler varía la cantidad de tiempo que 
+    tiene que ejecutarse una tarea.
+  \item El scheduler recibe $n$ parámetros donde cada uno indica un determinado quantum a ser ejecutado. Estos son asignados a todas 
+    las tareas de manera secuencial. Se puede pensar que se tiene un vector de quantums, y todas las tareas estan en determinada posición,
+    corriendo un determinado quantum.
+  \item La primera vez que se ejecuta cada tarea corre por un quantum, sin importar el resto de los elementos del vector.
+  \item Hay un caso especial que es cuando alguno de los parámetros es 0. En ese caso, a partir de esa posición en el vector, el $scheduling$ funciona como 
+    un \textbf{First Come First Served}. Si es el primer parámetro recibido, se ejecuta desde el principio de esa manera. 
+  \item En el orden en el cual se recibieron los quantums se le va asignando a las tareas que corran esa determinada cantidad de tiempo. Van 
+    recorriendo de manera secuencial los quantums a ejecutarse. Todas las tareas tienen que estar en la misma posición del vector de quantums 
+    para poder avanzar a la siguiente posición.
+  \item En caso de que una tarea realice una llamada bloqueante se reinicia su posición en el vector a la anterior de la cual estaba posicionado 
+    cuando surgió la llamada bloqueante. Hasta que no llegue a la posición donde 
+    estan el resto de las tareas, avanza la cantidad de veces que necesite en el vector de quantums, hasta alcanzar al resto.
+  \item En caso de que haya varias bloqueantes, se realiza el mismo procedimiento haciendo un \textbf{Round Robin} de quantums variados en solo 
+    las tareas bloqueadas, hasta que alcancen al resto.
+\end{itemize}
+
+\vspace{1mm}
+\textbf{Estructuras para simular el scheduler}:
+\vspace{1mm}
+
+Utilizamos un vector de colas, donde la primer cola tiene quantum 1, y el resto tienen un determinado quantum que es recibido por parametro. También 
+usamos un vector para las tareas que se bloquearon y otro mismo para ver en que cola estaban las tareas antes de ser bloqueadas.
+
+
+\vspace{1mm}
+\textbf{Ejemplos de comportamiento}:
+\vspace{1mm}
 
 Esta simulación está hecha con el mismo lote de tareas del Ejercicio 5 (una \textbf{TaskCPU} de 30 ciclos y dos de 30). 
 Los valores pasados como parámetro fueron $5$ $4$ $0$ $4$.
@@ -238,17 +270,21 @@ Los valores pasados como parámetro fueron $5$ $4$ $0$ $4$.
 
 En este caso, observamos que todas las tareas corren 1 ciclo, 5 ciclos, 4 ciclos y cuando el scheduler toma el valor 0 ejecuta los procesos hasta el EXIT sin importar los parámetros que fueron pasados después.  
 
-\item tu vieja
+En la siguiente simulación utilizamos un lote de 5 tareas, de las cuales 3 se bloquean.
+
 %./simusched tareaEj7dos.tsk 1 0 0 SchedMistery 5 4 3 | ./graphsched.py > informe/Ej7Ej2.png
 
       \begin{figure}[H]
-        \includegraphics[scale=0.5]{Ej7Ej2}
+        \includegraphics[scale=0.5]{mistRR}
         \caption{Simulación SchedNoMistery con bloqueos} 
       \end{figure}
 
-En esta simulación, corre la \textbf{Task0} durante 5 ciclos
+Podemos observar en este caso como se reinician los quantums de las tareas que se desbloquearon. Por ejemplo para las tareas 0 y 2 como fueron 
+bloqueadas al empezar a correr por quantum 3, fueron reiniciadas a la primer posición del vector, la cual tiene quantum 1. Al retomar su ejecución 
+corren por 4 ciclos (1 más 3). La tarea 1, como fue bloqueada cuando estaba por correr su iteración del quantum 2, fue reiniciada a la posición 
+1 del vector, con quantum 3.
 
-\end{enumerate}
+\newpage
 
 \subsection{Ejercicio 8}
 En este ejercicio implementamos un shceduler $Roud Robin$ con la propiedad de que no permite migracion de procesos entre cpus, a continuacion se analizara su performance en comparacion con $Round Robin(hood)$ implementado en el ejercicio 4. \\
