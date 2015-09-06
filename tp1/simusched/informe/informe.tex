@@ -137,7 +137,7 @@ Tiempo de Ejecución & 101 & 57 & 60 \\ \hline
 %\end{center}
 \end{table}
 
-En este caso se observa que las 3 tareas tienen un tiempo de espera elevado con respecto al tiempo de ejecución total. La \textbf{Task0} espera durante el 50\% del tiempo, mientras que las \textbf{Task1} y \textbf{Task2} esperan aproximadamente 74,5\% y 73,3\% respectivamente. Por otro lado, la latencia de los procesos es baja con respecto a la cantidad de ciclos que le lleva terminar de ejecutarse. 
+En este caso se observa que las 3 tareas tienen un tiempo de espera elevado con respecto al tiempo de ejecución total. La \textbf{Task0} espera durante el 50\% del tiempo, mientras que las \textbf{Task1} y \textbf{Task2} esperan aproximadamente 63\% y 65\% respectivamente. Por otro lado, la latencia de los procesos es baja con respecto a la cantidad de ciclos que le lleva terminar de ejecutarse. 
 
 \item \textbf{Round-Robin con quantum 10}
 
@@ -162,7 +162,7 @@ Tiempo de Ejecución & 93 & 96 & 99 \\ \hline
 %\end{center}
 \end{table}
 
-Para el scheduler con quantum 10, se observa una mejora con respecto al tiempo de espera de la \textbf{Task 0}, disminuyendo el porcentaje a aproximadamente el 45,2\%, sin embargo, las otras dos tareas elevaron su tiempo de espera a alrededor del 83\%. Al igual que en el caso anterior, la latencia continúa siendo relativamente baja.
+Para el scheduler con quantum 10, se observa una mejora con respecto al tiempo de espera de la \textbf{Task 0}, disminuyendo el porcentaje a aproximadamente el 45,2\%, sin embargo, las otras dos tareas elevaron su tiempo de espera a alrededor del 78\%. Al igual que en el caso anterior, la latencia continúa siendo relativamente baja.
 
 \item \textbf{Round-Robin con quantum 50}
 
@@ -189,7 +189,7 @@ Tiempo de Ejecución & 61 & 88 & 91 \\ \hline
 
 TODOS ESTOS PORCENTAJES ESTAN MAL CAPAAAAAAAAAA
 
-En este caso, el porcentaje de tiempo de espera de la \textbf{Task 0} disminuye notablemente a un 16,4\%, y los tiempos de espera de las tareas restantes están alrededor de 82\%, porcentaje similar al caso del scheduler de quantum 10. Sin embargo, como en este caso se le asigna un quantum elevado a la primer tarea, el tiempo de latencia de las \textbf{Task 1} y \textbf{Task 2} ahora es de 54 y 57 ciclos respectivamente. 
+En este caso, el porcentaje de tiempo de espera de la \textbf{Task 0} disminuye notablemente a un 16,4\%, y los tiempos de espera de las tareas restantes están alrededor de 76\%, porcentaje similar al caso del scheduler de quantum 10. Sin embargo, como en este caso se le asigna un quantum elevado a la primer tarea, el tiempo de latencia de las \textbf{Task 1} y \textbf{Task 2} ahora es de 54 y 57 ciclos respectivamente. 
 \end{enumerate}
 
 \subsection{Conclusión}
@@ -223,17 +223,30 @@ El \textit{SchedRR} es más justo con respecto a la asignación de CPU. Aunque e
 En esta sección experimentamos con el \textit{SchedMistery}, a continuación ejemplos de su comportamiento:
 
 \begin{enumerate}
-\item Pasar como parámentro al scheduler un $0$
+\item \textbf{Pasar como parámentro al scheduler un $0$}
 
-Esta simulación está hecha con el mismo lote de tareas del Ejercicio 5 (una \textbf{TaskCpu} de 50 ciclos y dos \textbf{TaskConsola2} que hacen 5 llamadas bloqueantes de 3 ciclos de duración). 
+Esta simulación está hecha con el mismo lote de tareas del Ejercicio 5 (una \textbf{TaskCPU} de 30 ciclos y dos de 30). 
 Los valores pasados como parámetro fueron $5$ $4$ $0$ $4$.
 
+%para el Makefile
+%./simusched tareaEj7uno.tsk 1 0 0 SchedMistery 5 4 0 4 | ./graphsched.py > informe/Ej7Ej1.png
+
       \begin{figure}[H]
-        \includegraphics[scale=0.5]{Ej7Ej1bis}
+        \includegraphics[scale=0.5]{Ej7Ej1}
         \caption{Simulación SchedNoMistery con un 0 como parámetro} 
       \end{figure}
 
-En este caso, observamos que 
+En este caso, observamos que todas las tareas corren 1 ciclo, 5 ciclos, 4 ciclos y cuando el scheduler toma el valor 0 ejecuta los procesos hasta el EXIT sin importar los parámetros que fueron pasados después.  
+
+\item tu vieja
+%./simusched tareaEj7dos.tsk 1 0 0 SchedMistery 5 4 3 | ./graphsched.py > informe/Ej7Ej2.png
+
+      \begin{figure}[H]
+        \includegraphics[scale=0.5]{Ej7Ej2}
+        \caption{Simulación SchedNoMistery con bloqueos} 
+      \end{figure}
+
+En esta simulación, corre la \textbf{Task0} durante 5 ciclos
 
 \end{enumerate}
 
