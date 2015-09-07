@@ -81,14 +81,14 @@ void TaskInternet(int pid, vector<int> params) {
 
 // Ejercicio 3
 void TaskBatch(int pid, vector<int> params) {
-  int tiempoCpu = params[0];
+  int tiempoCpu    = params[0];
   int cantBloqueos = params[1];
-  int tiempoTotal = tiempoCpu - cantBloqueos;
+  int tiempoTotal  = tiempoCpu - cantBloqueos;
   unsigned int seed = time(NULL);
   
   while (tiempoTotal > 0 && cantBloqueos > 0) {
-    int decision = (rand_r(&seed)) % 2;
-    if (decision) {
+    int decision = (rand_r(&seed)) % (tiempoCpu);
+    if (decision <= cantBloqueos) {
       uso_IO(pid, 1);
       cantBloqueos--;
     } else {
