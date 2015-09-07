@@ -51,7 +51,6 @@
 Con el crecimiento de los sistemas operativos y la capacidad de hardware para soportar varios procesos, surgen nuevos desafios a la hora de diseñar dichos sistemas. Uno de ellos es la organizacion de los procesos o $scheduling$, pero...¿hay una manera optima de hacerlo?, la respuesta es que depende cual sea la finalidad del sistema, Para esto existen muchos criterios bajo los cuales pueden ser organizados los procesos. 
  En este trabajo se implementaron distintas simulaciones interactivas entre tareas. A su vez se implementaron distintas clases de scheduling para interactuar 
  con las tareas creadas, y dichas interacciones se representaron de manera gráfica.
-  Hare que no se hablar, i know that feling bro.
 \end{abstract}
 
 \newpage
@@ -83,7 +82,7 @@ intervalo
 \section{Ejercicio 2}
 
 El ejercicio consiste en simular la situación que enfrenta nuestro querido amigo Rolando, el cual quiere correr un algoritmo a la vez que escucha 
-música y consume drogas JAJAJAJAJAJAJAJAJA MUY BUENO.  El algoritmo que corre hace uso intensivo del cpu por 100 ciclos, mientras que la música e internet realizan una 
+música y utiliza internet. El algoritmo que corre hace uso intensivo del cpu por 100 ciclos, mientras que la música e internet realizan una 
 cantidad determinada de llamadas bloqueantes. La música hace 20 e internet 25, cada una de duración variable entre 2 y 4 ciclos. La manera 
 de generar la duración pseudoaleatoria de los ciclos de las llamadas bloqueantes fue la misma que la utilizada en el ejercicio previo, a través 
 de la funcion \textbf{generate}. El algoritmo de $scheduling$ utilizado para este ejercicio fue \textbf{First Come, First Served}.
@@ -96,59 +95,24 @@ A contuacion analizaremos el rendimiento del señor rolando con una computadora 
     \caption{Simulación FCFS con cambio de contexto 4 en 1 cpu}
   \end{figure}
 
-  Inserte metricas aqui <-
+\begin{table}[htb]
+%\begin{center}
+\centering
+\begin{tabular}{| l | l | l | l |}
+\hline
+" " & Task0 & Task1 & Task2 \\
+\hline \hline
+Latencia & 4 & 109 & 219 \\ \hline
+\end{tabular}
+%\end{center}
+\end{table}
+
 
   \begin{figure}[H]
     \includegraphics[scale=0.5]{Ejercicio2_2cpu}
     \caption{Simulación FCFS con cambio de contexto 4 en 2 cpus}
   \end{figure}
 
-\section{Ejercicio 3}
-
-  \begin{figure}[H]
-    \includegraphics[scale=0.5]{Ejercicio3_1}
-    \caption{simulacion ejercicio 3}
-  \end{figure}
-
-  \begin{figure}[H]
-    \includegraphics[scale=0.5]{Ejercicio3_2}
-    \caption{simulacion ejercicio 3}
-  \end{figure}
-
-  \begin{figure}[H]
-    \includegraphics[scale=0.5]{Ejercicio3_3}
-    \caption{simulacion ejercicio 3}
-  \end{figure}
-\newpage 
-
-\section{Ejercicio 4}
-
-En este ejercicio completamos la implentación del scheduler \textit{Round-Robin}. Éste consiste en asignarle un quantum determinado a cada tarea e ir alternando el procesador entre las distintas tareas. Cada núcleo puede, o no, tener quantum distintos. 
-
-\subsection{Elección de estructuras}
-
-Para la implementación del scheduler utilizamos una cola con las tareas que están en estado LISTAS, y almacenamos en un vector aquellas que están BLOQUEADAS. Además, cada núcleo conoce cuál es la tarea que está CORRIENDO, y cuántos ciclos lleva, con lo cual, dado que tiene un quantum determinado, calcula en qué momento debe desalojarla y darle el procesador a la siguiente tarea.
-Hay una única cola de tareas, en decir, se permite la migración de núcleos, ya que el scheduler desencola la primer tarea en estado LISTA y le asigna el núcleo que esté libre en ese momento sin importar en qué núcleo se ejecutó en ciclos anteriores. 
-
-\newpage
-
-\section{Ejercicio 5}
-
-En esta sección evaluaremos el rendimiento del scheduler \textit{Round-Robin} según el tiempo de latencia, el waiting-time (tiempo que el proceso está en estado READY), y el tiempo total de ejecución. Utilizaremos un lote de tareas con una de tipo \textbf{TaskCPU} de 50 ciclos, y dos \textbf{TaskConsola2} que hacen 5 llamadas bloqueantes, cada una de ellas de 3 ciclos de duración. 
-Los cálculos de los cuadros están hechos sobre los datos de la simulación y la unidad de medida es \textit{ciclo}. \\
-
-%./simusched tareaEj5.tsk 1 2 0 SchedRR 1 2 CON ESTE COMANDO GENERE LA IMAGEN, LO DEJO PAL MAKEFILE 
-
-\subsection{Análisis de \textit{Round-Robin} para distintos quantum}
-\begin{enumerate}
-\item \textbf{Round-Robin con quantum 2}
-
-      \begin{figure}[H]
-        \includegraphics[scale=0.5]{Ej5q2}
-        \caption{Simulación SchedRR quantum 2}
-      \end{figure}
-
-%TABLA PARA QUANTUM 2
 \begin{table}[htb]
 %\begin{center}
 \centering
@@ -156,228 +120,305 @@ Los cálculos de los cuadros están hechos sobre los datos de la simulación y l
 \hline
 " " & Task0 & Task1 & Task2 \\
 \hline \hline
-Latencia & 2 & 6 & 9 \\ \hline
-Waiting Time & 50 & 36 & 39 \\ \hline
-Tiempo de Ejecución & 101 & 57 & 60 \\ \hline
+Latencia & 4 & 4 & 107 \\ \hline
 \end{tabular}
-\caption{cálculos con quantum 2}
 %\end{center}
 \end{table}
 
-En este caso se observa que las 3 tareas tienen un tiempo de espera elevado con respecto al tiempo de ejecución total. La \textbf{Task0} espera durante el 50\% del tiempo, mientras que las \textbf{Task1} y \textbf{Task2} esperan aproximadamente 63\% y 65\% respectivamente. Por otro lado, la latencia de los procesos es baja con respecto a la cantidad de ciclos que le lleva terminar de ejecutarse. 
+Si Rolando tuviese un solo $core$ no le convendría usar ese tipo de scheduler. Como podemos observar, para hacer tres simples tareas
+tiene que esperar en cada una a la finalización de la anterior, lo cual hace que si una de las tareas era muy larga, el resto tarde mucho en 
+poder ser ejecutadas. Esto es lo que causa que la latencia de cada tarea sea muy alta, excepto por la primera.
+Rolando va a ver como no puede hacer nada más en la computadora mientras corre su algoritmo.
+Podemos observar como al agregar otro cpu para correr tareas, el cálculo de la latencia es menor para las dos ultimas tareas. 
 
-\item \textbf{Round-Robin con quantum 10}
+  \newpage
 
-      \begin{figure}[H]
-        \includegraphics[scale=0.5]{Ej5q10}
-        \caption{Simulación SchedRR quantum 10}
-      \end{figure}
+  \section{Ejercicio 3}
 
-%TABLA PARA QUANTUM 10
-\begin{table}[htb]
-%\begin{center}
-\centering
-\begin{tabular}{| l | l | l | l |}
-\hline
-" " & Task0 & Task1 & Task2 \\
-\hline \hline
-Latencia & 2 & 14 & 17 \\ \hline
-Waiting Time & 42 & 75 & 78 \\ \hline
-Tiempo de Ejecución & 93 & 96 & 99 \\ \hline
-\end{tabular}
-\caption{cálculos con quantum 10}
-%\end{center}
-\end{table}
+  El ejercicio consiste en programar un lote de tareas llamadas \textbf{TaskBatch} las cuales utilizan una determinada cantidad de tiempo de cpu, y 
+  realizan una cantidad determinada de llamadas bloqueantes, las cuales deben ser invocadas en momentos pseudoaleatorios. El tiempo total que corre 
+  la tarea es la resta entre el tiempo del cpu asignado y la cantidad de llamadas bloqueantes. Lo que hicimos para implementar esta tarea fue generar 
+  una $semilla$ de la misma manera que en los ejercicios previos y, al resultado obtenido, tomarle módulo 2 para determinar si utilizar el cpu o 
+  realizar una llamada bloqueante. Luego, si ya se realizaron todos los bloqueos necesarios, o se utilizo todo el cpu que se tuvo que utilizar, se 
+  agota el tiempo restante haciendo llamadas al cpu o al bloqueo, dependiendo lo que reste.
 
-Para el scheduler con quantum 10, se observa una mejora con respecto al tiempo de espera de la \textbf{Task 0}, disminuyendo el porcentaje a aproximadamente el 45,2\%, sin embargo, las otras dos tareas elevaron su tiempo de espera a alrededor del 78\%. Al igual que en el caso anterior, la latencia continúa siendo relativamente baja.
+    \begin{figure}[H]
+      \includegraphics[scale=0.5]{Ejercicio3_1}
+      \caption{simulacion ejercicio 3}
+    \end{figure}
 
-\item \textbf{Round-Robin con quantum 50}
+    \begin{figure}[H]
+      \includegraphics[scale=0.5]{Ejercicio3_2}
+      \caption{simulacion ejercicio 3}
+    \end{figure}
 
-      \begin{figure}[H]
-        \includegraphics[scale=0.5]{Ej5q50}
-        \caption{Simulación SchedRR quantum 50}
-      \end{figure}
+    \begin{figure}[H]
+      \includegraphics[scale=0.5]{Ejercicio3_3}
+      \caption{simulacion ejercicio 3}
+    \end{figure}
 
-%TABLA PARA QUANTUM 50
-\begin{table}[htb]
-%\begin{center}
-\centering
-\begin{tabular}{| l | l | l | l |}
-\hline
-" " & Task0 & Task1 & Task2 \\
-\hline \hline
-Latencia & 2 & 54 & 57 \\ \hline
-Waiting Time & 10 & 67 & 70 \\ \hline
-Tiempo de Ejecución & 61 & 88 & 91 \\ \hline
-\end{tabular}
-\caption{cálculos con quantum 50}
-%\end{center}
-\end{table}
+  Podemos observar en los gráficos la manera $pseudoaleatoria$ de realizar las llamadas bloqueantes a lo largo de la ejecución.
 
-TODOS ESTOS PORCENTAJES ESTAN MAL CAPAAAAAAAAAA
-
-En este caso, el porcentaje de tiempo de espera de la \textbf{Task 0} disminuye notablemente a un 16,4\%, y los tiempos de espera de las tareas restantes están alrededor de 76\%, porcentaje similar al caso del scheduler de quantum 10. Sin embargo, como en este caso se le asigna un quantum elevado a la primer tarea, el tiempo de latencia de las \textbf{Task 1} y \textbf{Task 2} ahora es de 54 y 57 ciclos respectivamente. 
-\end{enumerate}
-
-\subsection{Conclusión}
-HARE LOCO
-
-\newpage
-
-\section{Ejercicio 6}
-
-En esta sección analizaremos las diferencias entre los schedulers \textit{Round-Robin} y \textit{First Come First Serve}. Para esto, simulamos el comportamiento del scheduler \textit{FCFS} con el mismo lote de tareas del Ejercicio 5.
-
-      \begin{figure}[H]
-        \includegraphics[scale=0.5]{Ej6}
-        \caption{Simulación SchedFCFS}
-      \end{figure}
-
-\subsection{Comparación entre \textit{SchedRR} y \textit{SchedFCFS}}
-
-El comportamiento del \textit{SchedRR} de quantum 50 para la \textbf{Task 0} es similar al del \textit{SchedFCFS} dado que se ejecuta durante los 50 ciclos de duración (ver figura 3). El primer scheduler la desaloja en el ciclo 51 (aumentando su waiting time dado que solo le faltaba ejecutar el EXIT), mientras que el otro la desaloja una vez que realizó el EXIT. Como puede observarse en las dos figuras, el tiempo de latencia es similar al igual que el tiempo total de ejecución. Sin embargo, el \textit{SchedRR} aprovecha el hecho de que una tarea esté bloqueada para darle procesador a la siguiente, como se ve en el ciclo 55 de la figura 3: la \textbf{Task 1} tenía el procesador, y, apenas se bloquea, el scheduler la desaloja y pone a correr la \textbf{Task 2} que comienza a ejecutar en el ciclo 57 dado que el costo de cambio de contexto es de 2 ciclos. \\
-
-En el \textit{SchedRR} de quantum 10, la \textbf{Task 0} tiene un tiempo de ejecución mayor que en el caso anterior, dado que, si no hay bloqueos, el scheduler le da el procesador a la siguiente tarea cada 10 ciclos. En este caso, esto no es ventajoso, dado que las \textbf{Task 1} y \textbf{Task 2} apenas empiezan a ejecutar, se bloquean, entonces la tarea 10 paga el costo de cambio de contexto al momento de volver a tener el procesador, pero las otras dos tareas ejecutaron solamente 1 ciclo (por ejemplo, en el ciclo 12 de la figura 2, la tarea 0 es desalojada, luego de 2 ciclos de costo de cambio de contexto, ejecuta la tarea 1 y se bloquea, entonces el scheduler le pasa el procesador a la tarea 2, que hace lo mismo que la 1, luego éste la desaloja, y la tarea 0 paga el costo de cambio de contexto para volver a ejecutar). Pablito clavo un clavito apesta esto \\
-
-Por último, el \textit{SchedRR} de quantum 2, YA NO SE QUE PONER ACA. 
- 
-\subsection{Conclusión}
-
-El \textit{SchedRR} es más justo con respecto a la asignación de CPU. Aunque eventualmente el \textit{SchedFCFS} le da procesador a todas las tareas, una con muy pocos ciclos de ejecución podría esperar que termine otra que tiene una cantidad significativamente mayor de ejecución. En el primer scheduler, probablemente la tarea de tiempo de ejecución menor pueda terminar antes, sin tener que esperar que todas las demás hayan terminado de usar el procesador. Esto también se ve reflejado en la latencia, ya que en FCFS un proceso podría estar esperando una cantidad indefinida de tiempo (dependiendo del momento en el que se inicio, cuántos procesos hay en la cola y cuánto tiempo van a tardar) mientras que en RR va a tener una latencia razonable dependiendo del quantum del scheduler. Es por esto que el \textit{Turnaround} de cada proceso va a ser menor, ya que como se va alternando el uso de procesador, no van a tener que sumar todo el tiempo que estuvieron esperándolo.
-
-\section{Ejercicio 7}
-
-El ejercicio consiste en revelar el extraño comportamiento de un scheduler llamado \textbf{SchedMistery}. Para poder estudiar su comportamiento 
-lo que hicimos fue correr varias veces el simulador utilizando distintos lotes de tareas y a su vez, pasandole distintos parámetros.
-Utilizamos lotes de tareas simples, que solo utilizan el cpu, y lotes de tareas que contienen llamadas bloqueantes.
-Por consigna, sabemos que el scheduler tiene la capacidad de ser utilizado para un sole core.
-
-Nos dimos cuenta de las siguientes características:
-\begin{itemize}
-  \item El scheduler utiliza una especie de \textbf{Round Robin}, donde en cada iteración del scheduler varía la cantidad de tiempo que 
-    tiene que ejecutarse una tarea.
-  \item El scheduler recibe $n$ parámetros donde cada uno indica un determinado quantum a ser ejecutado. Estos son asignados a todas 
-    las tareas de manera secuencial. Se puede pensar que se tiene un vector de quantums, y todas las tareas estan en determinada posición,
-    corriendo un determinado quantum.
-  \item La primera vez que se ejecuta cada tarea corre por un quantum, sin importar el resto de los elementos del vector.
-  \item Hay un caso especial que es cuando alguno de los parámetros es 0. En ese caso, a partir de esa posición en el vector, el $scheduling$ funciona como 
-    un \textbf{First Come First Served}. Si es el primer parámetro recibido, se ejecuta desde el principio de esa manera. 
-  \item En el orden en el cual se recibieron los quantums se le va asignando a las tareas que corran esa determinada cantidad de tiempo. Van 
-    recorriendo de manera secuencial los quantums a ejecutarse. Todas las tareas tienen que estar en la misma posición del vector de quantums 
-    para poder avanzar a la siguiente posición.
-  \item En caso de que una tarea realice una llamada bloqueante se reinicia su posición en el vector a la anterior de la cual estaba posicionado 
-    cuando surgió la llamada bloqueante. Hasta que no llegue a la posición donde 
-    estan el resto de las tareas, avanza la cantidad de veces que necesite en el vector de quantums, hasta alcanzar al resto.
-  \item En caso de que haya varias bloqueantes, se realiza el mismo procedimiento haciendo un \textbf{Round Robin} de quantums variados en solo 
-    las tareas bloqueadas, hasta que alcancen al resto.
-\end{itemize}
-
-\vspace{1mm}
-\textbf{Estructuras para simular el scheduler}:
-\vspace{1mm}
-
-Utilizamos un vector de colas, donde la primer cola tiene quantum 1, y el resto tienen un determinado quantum que es recibido por parametro. También 
-usamos un vector para las tareas que se bloquearon y otro mismo para ver en que cola estaban las tareas antes de ser bloqueadas.
+  \newpage 
 
 
-\vspace{1mm}
-\textbf{Ejemplos de comportamiento}:
-\vspace{1mm}
+  \section{Ejercicio 4}
 
-Esta simulación está hecha con el mismo lote de tareas del Ejercicio 5 (una \textbf{TaskCPU} de 30 ciclos y dos de 30). 
-Los valores pasados como parámetro fueron $5$ $4$ $0$ $4$.
+  En este ejercicio completamos la implentación del scheduler \textit{Round-Robin}. Éste consiste en asignarle un quantum determinado a cada tarea e ir alternando el procesador entre las distintas tareas. Cada núcleo puede, o no, tener quantum distintos. 
 
-%para el Makefile
-%./simusched tareaEj7uno.tsk 1 0 0 SchedMistery 5 4 0 4 | ./graphsched.py > informe/Ej7Ej1.png
+  \subsection{Elección de estructuras}
 
-      \begin{figure}[H]
-        \includegraphics[scale=0.5]{Ej7Ej1}
-        \caption{Simulación SchedNoMistery con un 0 como parámetro} 
-      \end{figure}
+  Para la implementación del scheduler utilizamos una cola con las tareas que están en estado LISTAS, y almacenamos en un vector aquellas que están BLOQUEADAS. Además, cada núcleo conoce cuál es la tarea que está CORRIENDO, y cuántos ciclos lleva, con lo cual, dado que tiene un quantum determinado, calcula en qué momento debe desalojarla y darle el procesador a la siguiente tarea.
+  Hay una única cola de tareas, en decir, se permite la migración de núcleos, ya que el scheduler desencola la primer tarea en estado LISTA y le asigna el núcleo que esté libre en ese momento sin importar en qué núcleo se ejecutó en ciclos anteriores. 
 
-En este caso, observamos que todas las tareas corren 1 ciclo, 5 ciclos, 4 ciclos y cuando el scheduler toma el valor 0 ejecuta los procesos hasta el EXIT sin importar los parámetros que fueron pasados después.  
+  \newpage
 
-En la siguiente simulación utilizamos un lote de 5 tareas, de las cuales 3 se bloquean.
+  \section{Ejercicio 5}
 
-%./simusched tareaEj7dos.tsk 1 0 0 SchedMistery 5 4 3 | ./graphsched.py > informe/Ej7Ej2.png
+  En esta sección evaluaremos el rendimiento del scheduler \textit{Round-Robin} según el tiempo de latencia, el waiting-time (tiempo que el proceso está en estado READY), y el tiempo total de ejecución. Utilizaremos un lote de tareas con una de tipo \textbf{TaskCPU} de 50 ciclos, y dos \textbf{TaskConsola2} que hacen 5 llamadas bloqueantes, cada una de ellas de 3 ciclos de duración. 
+  Los cálculos de los cuadros están hechos sobre los datos de la simulación y la unidad de medida es \textit{ciclo}. \\
 
-      \begin{figure}[H]
-        \includegraphics[scale=0.5]{mistRR}
-        \caption{Simulación SchedNoMistery con bloqueos} 
-      \end{figure}
+  %./simusched tareaEj5.tsk 1 2 0 SchedRR 1 2 CON ESTE COMANDO GENERE LA IMAGEN, LO DEJO PAL MAKEFILE 
 
-Podemos observar en este caso como se reinician los quantums de las tareas que se desbloquearon. Por ejemplo para las tareas 0 y 2 como fueron 
-bloqueadas al empezar a correr por quantum 3, fueron reiniciadas a la primer posición del vector, la cual tiene quantum 1. Al retomar su ejecución 
-corren por 4 ciclos (1 más 3). La tarea 1, como fue bloqueada cuando estaba por correr su iteración del quantum 2, fue reiniciada a la posición 
-1 del vector, con quantum 3.
+  \subsection{Análisis de \textit{Round-Robin} para distintos quantum}
+  \begin{enumerate}
+  \item \textbf{Round-Robin con quantum 2}
 
-\newpage
+        \begin{figure}[H]
+          \includegraphics[scale=0.5]{Ej5q2}
+          \caption{Simulación SchedRR quantum 2}
+        \end{figure}
 
-\subsection{Ejercicio 8}
-En este ejercicio implementamos un shceduler $Roud Robin$ con la propiedad de que no permite migracion de procesos entre cpus, a continuacion se analizara su performance en comparacion con $Round Robin(hood)$ implementado en el ejercicio 4. \\
+  %TABLA PARA QUANTUM 2
+  \begin{table}[htb]
+  %\begin{center}
+  \centering
+  \begin{tabular}{| l | l | l | l |}
+  \hline
+  " " & Task0 & Task1 & Task2 \\
+  \hline \hline
+  Latencia & 2 & 6 & 9 \\ \hline
+  Waiting Time & 50 & 36 & 39 \\ \hline
+  Tiempo de Ejecución & 101 & 57 & 60 \\ \hline
+  \end{tabular}
+  \caption{cálculos con quantum 2}
+  %\end{center}
+  \end{table}
 
-Veamos cuando esto no es conveniente, supongamos que tenemos un varios cpus y uno de ello posee quantum grande, entonces si alguna tarea que no bloquee cae sobre ese cpu, las tareas que corran sobre el y contengan bloqueos se veran afectadas, ya que no usaran todo su quantum y luego de haber terminado el periodo de bloqueo deberan esperar probablemente un gran periodo de tiempo hasta poder volver a correr, veamos un ejemplo: 
+  En este caso se observa que las 3 tareas tienen un tiempo de espera elevado con respecto al tiempo de ejecución total. La \textbf{Task0} espera durante el 50\% del tiempo, mientras que las \textbf{Task1} y \textbf{Task2} esperan aproximadamente 63\% y 65\% respectivamente. Por otro lado, la latencia de los procesos es baja con respecto a la cantidad de ciclos que le lleva terminar de ejecutarse. 
 
-Para este ejemplo se utilizaron $TaskRolando$ y $TaskConsola$ para simular las llamadas a CPU intensivas y los bloqueos constantes sobre el primer CPU y sobre el segundo simplemente se corrio una tarea rolando.
-%./simusched tareaRR2PeorCaso.tsk 2 0 0 SchedRR2 2 1 1 | ./graphsched.py > informe/Ej8PeorCaso.png
+  \item \textbf{Round-Robin con quantum 10}
 
-  \begin{figure}[H]
-    \includegraphics[scale=0.5]{Ej8PeorCaso}
-    \caption{Simulacion schedRR2 para peor caso en Ejercicio8}
-  \end{figure}
+        \begin{figure}[H]
+          \includegraphics[scale=0.5]{Ej5q10}
+          \caption{Simulación SchedRR quantum 10}
+        \end{figure}
 
-A simple vista se puede sobservar que el cpu 1 pasa la mayor parte de su tiempo en idle esperando que la tarea que corre se desbloquee. 
+  %TABLA PARA QUANTUM 10
+  \begin{table}[htb]
+  %\begin{center}
+  \centering
+  \begin{tabular}{| l | l | l | l |}
+  \hline
+  " " & Task0 & Task1 & Task2 \\
+  \hline \hline
+  Latencia & 2 & 14 & 17 \\ \hline
+  Waiting Time & 42 & 75 & 78 \\ \hline
+  Tiempo de Ejecución & 93 & 96 & 99 \\ \hline
+  \end{tabular}
+  \caption{cálculos con quantum 10}
+  %\end{center}
+  \end{table}
 
-A continuacion veremos como hubiera corrido si hubieramos usado el scheduler del ejercicio 4
+  Para el scheduler con quantum 10, se observa una mejora con respecto al tiempo de espera de la \textbf{Task 0}, disminuyendo el porcentaje a aproximadamente el 45,2\%, sin embargo, las otras dos tareas elevaron su tiempo de espera a alrededor del 78\%. Al igual que en el caso anterior, la latencia continúa siendo relativamente baja.
 
-%./simusched tareaRR2PeorCaso.tsk 2 0 0 SchedRR 2 31 2 | ./graphsched.py > informe/Ej8PeorCasoRR.png
-  \begin{figure}[H]
-    \includegraphics[scale=0.5]{Ej8PeorCasoRR}
-    \caption{Simulacion schedRR para peor caso en Ejercicio8}
-  \end{figure}
+  \item \textbf{Round-Robin con quantum 50}
 
-Finalmente, veremos como funcionaria bajo $First Come First Serve$
+        \begin{figure}[H]
+          \includegraphics[scale=0.5]{Ej5q50}
+          \caption{Simulación SchedRR quantum 50}
+        \end{figure}
 
-%./simusched tareaRR2PeorCaso.tsk 2 0 0 SchedFCFS 2 31 2 | ./graphsched.py > informe/Ej8PeorCasoFCFS.png
-  \begin{figure}[H]
-    \includegraphics[scale=0.5]{Ej8PeorCasoFCFS}
-    \caption{Simulacion $Fist Come First Serve$ para peor caso en Ejercicio8}
-  \end{figure}
+  %TABLA PARA QUANTUM 50
+  \begin{table}[htb]
+  %\begin{center}
+  \centering
+  \begin{tabular}{| l | l | l | l |}
+  \hline
+  " " & Task0 & Task1 & Task2 \\
+  \hline \hline
+  Latencia & 2 & 54 & 57 \\ \hline
+  Waiting Time & 10 & 67 & 70 \\ \hline
+  Tiempo de Ejecución & 61 & 88 & 91 \\ \hline
+  \end{tabular}
+  \caption{cálculos con quantum 50}
+  %\end{center}
+  \end{table}
 
-Comparando los resultados, se puede observar que utilizando $FCFS$ cuesta casi lo mismo que no permitir que los procesos cambien de CPU.
+  TODOS ESTOS PORCENTAJES ESTAN MAL CAPAAAAAAAAAA
 
-%Faltan metricas wachin!!
+  En este caso, el porcentaje de tiempo de espera de la \textbf{Task 0} disminuye notablemente a un 16,4\%, y los tiempos de espera de las tareas restantes están alrededor de 76\%, porcentaje similar al caso del scheduler de quantum 10. Sin embargo, como en este caso se le asigna un quantum elevado a la primer tarea, el tiempo de latencia de las \textbf{Task 1} y \textbf{Task 2} ahora es de 54 y 57 ciclos respectivamente. 
+  \end{enumerate}
 
-Ahora veamos el caso donde esto si sea conveniente, supongamos que tenemos un costo elevado para cambiar el proceso de nucleo, tenemos muchos procesos y cada CPU tiene poco quantum. En este caso se espera que los procesos sean intercambiados entre si muchas, de esta manera no esperaran demasiado y podran ir ejecutando de a poco. veamos un ejemplo:
+  \subsection{Conclusión}
+  HARE LOCO
 
-%./simusched tareaRR2MejorCaso.tsk 2 0 10 SchedRR2 2 5 5 | ./graphsched.py > informe/Ej8MejorCasoRR2.png
+  \newpage
 
-  \begin{figure}[H]
-    \includegraphics[scale=0.5]{Ej8MejorCasoRR2}
-    \caption{Simulacion schedRR2 para mejor caso en Ejercicio8}
-  \end{figure}
+  \section{Ejercicio 6}
 
-Como podemos observar, los procesos se reparten en los dos cpus y corren intermitentemente, como nunca cambian de procesador no pagan el costo de hacerlo. veamos ahora que pasaria en un entorno $round robin$ comun.
-%./simusched tareaRR2MejorCaso.tsk 2 0 10 SchedRR 2 5 5 | ./graphsched.py > informe/Ej8MejorCasoRR.png
+  En esta sección analizaremos las diferencias entre los schedulers \textit{Round-Robin} y \textit{First Come First Serve}. Para esto, simulamos el comportamiento del scheduler \textit{FCFS} con el mismo lote de tareas del Ejercicio 5.
 
-  \begin{figure}[H]
-    \includegraphics[scale=0.5]{Ej8MejorCasoRR}
-    \caption{Simulacion schedRR para mejor caso en Ejercicio8}
-  \end{figure}
+        \begin{figure}[H]
+          \includegraphics[scale=0.5]{Ej6}
+          \caption{Simulación SchedFCFS}
+        \end{figure}
 
-En este entorno los procesos intercambian cpus constantemente, con esto pagan siempre el costo de hacerlo por lo que demora enormemente que terminen de correr.
-%mas metricas, metricas everiwere
+  \subsection{Comparación entre \textit{SchedRR} y \textit{SchedFCFS}}
 
-Ahora veamos como correria en un contexto $FirstComeFirstServe$
+  El comportamiento del \textit{SchedRR} de quantum 50 para la \textbf{Task 0} es similar al del \textit{SchedFCFS} dado que se ejecuta durante los 50 ciclos de duración (ver figura 3). El primer scheduler la desaloja en el ciclo 51 (aumentando su waiting time dado que solo le faltaba ejecutar el EXIT), mientras que el otro la desaloja una vez que realizó el EXIT. Como puede observarse en las dos figuras, el tiempo de latencia es similar al igual que el tiempo total de ejecución. Sin embargo, el \textit{SchedRR} aprovecha el hecho de que una tarea esté bloqueada para darle procesador a la siguiente, como se ve en el ciclo 55 de la figura 3: la \textbf{Task 1} tenía el procesador, y, apenas se bloquea, el scheduler la desaloja y pone a correr la \textbf{Task 2} que comienza a ejecutar en el ciclo 57 dado que el costo de cambio de contexto es de 2 ciclos. \\
 
-%./simusched tareaRR2MejorCaso.tsk 2 0 10 SchedFCFS 2 5 5 | ./graphsched.py > informe/Ej8MejorCasoFCFS.png
+  En el \textit{SchedRR} de quantum 10, la \textbf{Task 0} tiene un tiempo de ejecución mayor que en el caso anterior, dado que, si no hay bloqueos, el scheduler le da el procesador a la siguiente tarea cada 10 ciclos. En este caso, esto no es ventajoso, dado que las \textbf{Task 1} y \textbf{Task 2} apenas empiezan a ejecutar, se bloquean, entonces la tarea 10 paga el costo de cambio de contexto al momento de volver a tener el procesador, pero las otras dos tareas ejecutaron solamente 1 ciclo (por ejemplo, en el ciclo 12 de la figura 2, la tarea 0 es desalojada, luego de 2 ciclos de costo de cambio de contexto, ejecuta la tarea 1 y se bloquea, entonces el scheduler le pasa el procesador a la tarea 2, que hace lo mismo que la 1, luego éste la desaloja, y la tarea 0 paga el costo de cambio de contexto para volver a ejecutar). Pablito clavo un clavito apesta esto \\
 
-  \begin{figure}[H]
-    \includegraphics[scale=0.5]{Ej8MejorCasoFCFS}
-    \caption{Simulacion $First\ Come\ First\ Serve$ para mejor caso en Ejercicio8}
-  \end{figure}
+  Por último, el \textit{SchedRR} de quantum 2, YA NO SE QUE PONER ACA. 
+   
+  \subsection{Conclusión}
 
-En este caso no se paga nada adicional, ya que los procesos empiezan cuando se les da el procesador y no iniciara el proximo hasta que este no termine, por lo que nunca pagara el costo de intercambio de cpu. Por otro lado el costo total que tomara procesar todo sera muchisimo mayor, ya que cuando algun proceso se bloquee no habra posibilidad de poner otro a correr en el medio haciendo que el total de corrida de los procesos sea mucho mayor.
+  El \textit{SchedRR} es más justo con respecto a la asignación de CPU. Aunque eventualmente el \textit{SchedFCFS} le da procesador a todas las tareas, una con muy pocos ciclos de ejecución podría esperar que termine otra que tiene una cantidad significativamente mayor de ejecución. En el primer scheduler, probablemente la tarea de tiempo de ejecución menor pueda terminar antes, sin tener que esperar que todas las demás hayan terminado de usar el procesador. Esto también se ve reflejado en la latencia, ya que en FCFS un proceso podría estar esperando una cantidad indefinida de tiempo (dependiendo del momento en el que se inicio, cuántos procesos hay en la cola y cuánto tiempo van a tardar) mientras que en RR va a tener una latencia razonable dependiendo del quantum del scheduler. Es por esto que el \textit{Turnaround} de cada proceso va a ser menor, ya que como se va alternando el uso de procesador, no van a tener que sumar todo el tiempo que estuvieron esperándolo.
 
-\end{document}
+  \section{Ejercicio 7}
+
+  El ejercicio consiste en revelar el extraño comportamiento de un scheduler llamado \textbf{SchedMistery}. Para poder estudiar su comportamiento 
+  lo que hicimos fue correr varias veces el simulador utilizando distintos lotes de tareas y a su vez, pasandole distintos parámetros.
+  Utilizamos lotes de tareas simples, que solo utilizan el cpu, y lotes de tareas que contienen llamadas bloqueantes.
+  Por consigna, sabemos que el scheduler tiene la capacidad de ser utilizado para un sole core.
+
+  Nos dimos cuenta de las siguientes características:
+  \begin{itemize}
+    \item El scheduler utiliza una especie de \textbf{Round Robin}, donde en cada iteración del scheduler varía la cantidad de tiempo que 
+      tiene que ejecutarse una tarea.
+    \item El scheduler recibe $n$ parámetros donde cada uno indica un determinado quantum a ser ejecutado. Estos son asignados a todas 
+      las tareas de manera secuencial. Se puede pensar que se tiene un vector de quantums, y todas las tareas estan en determinada posición,
+      corriendo un determinado quantum.
+    \item La primera vez que se ejecuta cada tarea corre por un quantum, sin importar el resto de los elementos del vector.
+    \item Hay un caso especial que es cuando alguno de los parámetros es 0. En ese caso, a partir de esa posición en el vector, el $scheduling$ funciona como 
+      un \textbf{First Come First Served}. Si es el primer parámetro recibido, se ejecuta desde el principio de esa manera. 
+    \item En el orden en el cual se recibieron los quantums se le va asignando a las tareas que corran esa determinada cantidad de tiempo. Van 
+      recorriendo de manera secuencial los quantums a ejecutarse. Todas las tareas tienen que estar en la misma posición del vector de quantums 
+      para poder avanzar a la siguiente posición.
+    \item En caso de que una tarea realice una llamada bloqueante se reinicia su posición en el vector a la anterior de la cual estaba posicionado 
+      cuando surgió la llamada bloqueante. Hasta que no llegue a la posición donde 
+      estan el resto de las tareas, avanza la cantidad de veces que necesite en el vector de quantums, hasta alcanzar al resto.
+    \item En caso de que haya varias bloqueantes, se realiza el mismo procedimiento haciendo un \textbf{Round Robin} de quantums variados en solo 
+      las tareas bloqueadas, hasta que alcancen al resto.
+  \end{itemize}
+
+  \vspace{1mm}
+  \textbf{Estructuras para simular el scheduler}:
+  \vspace{1mm}
+
+  Utilizamos un vector de colas, donde la primer cola tiene quantum 1, y el resto tienen un determinado quantum que es recibido por parametro. También 
+  usamos un vector para las tareas que se bloquearon y otro mismo para ver en que cola estaban las tareas antes de ser bloqueadas.
+
+
+  \vspace{1mm}
+  \textbf{Ejemplos de comportamiento}:
+  \vspace{1mm}
+
+  Esta simulación está hecha con el mismo lote de tareas del Ejercicio 5 (una \textbf{TaskCPU} de 30 ciclos y dos de 30). 
+  Los valores pasados como parámetro fueron $5$ $4$ $0$ $4$.
+
+  %para el Makefile
+  %./simusched tareaEj7uno.tsk 1 0 0 SchedMistery 5 4 0 4 | ./graphsched.py > informe/Ej7Ej1.png
+
+        \begin{figure}[H]
+          \includegraphics[scale=0.5]{Ej7Ej1}
+          \caption{Simulación SchedNoMistery con un 0 como parámetro} 
+        \end{figure}
+
+  En este caso, observamos que todas las tareas corren 1 ciclo, 5 ciclos, 4 ciclos y cuando el scheduler toma el valor 0 ejecuta los procesos hasta el EXIT sin importar los parámetros que fueron pasados después.  
+
+  En la siguiente simulación utilizamos un lote de 5 tareas, de las cuales 3 se bloquean.
+
+  %./simusched tareaEj7dos.tsk 1 0 0 SchedMistery 5 4 3 | ./graphsched.py > informe/Ej7Ej2.png
+
+        \begin{figure}[H]
+          \includegraphics[scale=0.5]{mistRR}
+          \caption{Simulación SchedNoMistery con bloqueos} 
+        \end{figure}
+
+  Podemos observar en este caso como se reinician los quantums de las tareas que se desbloquearon. Por ejemplo para las tareas 0 y 2 como fueron 
+  bloqueadas al empezar a correr por quantum 3, fueron reiniciadas a la primer posición del vector, la cual tiene quantum 1. Al retomar su ejecución 
+  corren por 4 ciclos (1 más 3). La tarea 1, como fue bloqueada cuando estaba por correr su iteración del quantum 2, fue reiniciada a la posición 
+  1 del vector, con quantum 3.
+
+  \newpage
+
+  \section{Ejercicio 8}
+  En este ejercicio implementamos un shceduler $Roud Robin$ con la propiedad de que no permite migracion de procesos entre cpus, a continuacion se analizara su performance en comparacion con $Round Robin(hood)$ implementado en el ejercicio 4. \\
+
+  Veamos cuando esto no es conveniente, supongamos que tenemos un varios cpus y uno de ello posee quantum grande, entonces si alguna tarea que no bloquee cae sobre ese cpu, las tareas que corran sobre el y contengan bloqueos se veran afectadas, ya que no usaran todo su quantum y luego de haber terminado el periodo de bloqueo deberan esperar probablemente un gran periodo de tiempo hasta poder volver a correr, veamos un ejemplo: 
+
+  Para este ejemplo se utilizaron $TaskRolando$ y $TaskConsola$ para simular las llamadas a CPU intensivas y los bloqueos constantes sobre el primer CPU y sobre el segundo simplemente se corrio una tarea rolando.
+  %./simusched tareaRR2PeorCaso.tsk 2 0 0 SchedRR2 2 1 1 | ./graphsched.py > informe/Ej8PeorCaso.png
+
+    \begin{figure}[H]
+      \includegraphics[scale=0.5]{Ej8PeorCaso}
+      \caption{Simulacion schedRR2 para peor caso en Ejercicio8}
+    \end{figure}
+
+  A simple vista se puede sobservar que el cpu 1 pasa la mayor parte de su tiempo en idle esperando que la tarea que corre se desbloquee. 
+
+  A continuacion veremos como hubiera corrido si hubieramos usado el scheduler del ejercicio 4
+
+  %./simusched tareaRR2PeorCaso.tsk 2 0 0 SchedRR 2 31 2 | ./graphsched.py > informe/Ej8PeorCasoRR.png
+    \begin{figure}[H]
+      \includegraphics[scale=0.5]{Ej8PeorCasoRR}
+      \caption{Simulacion schedRR para peor caso en Ejercicio8}
+    \end{figure}
+
+  Finalmente, veremos como funcionaria bajo $First Come First Serve$
+
+  %./simusched tareaRR2PeorCaso.tsk 2 0 0 SchedFCFS 2 31 2 | ./graphsched.py > informe/Ej8PeorCasoFCFS.png
+    \begin{figure}[H]
+      \includegraphics[scale=0.5]{Ej8PeorCasoFCFS}
+      \caption{Simulacion $Fist Come First Serve$ para peor caso en Ejercicio8}
+    \end{figure}
+
+  Comparando los resultados, se puede observar que utilizando $FCFS$ cuesta casi lo mismo que no permitir que los procesos cambien de CPU.
+
+  %Faltan metricas wachin!!
+
+  Ahora veamos el caso donde esto si sea conveniente, supongamos que tenemos un costo elevado para cambiar el proceso de nucleo, tenemos muchos procesos y cada CPU tiene poco quantum. En este caso se espera que los procesos sean intercambiados entre si muchas, de esta manera no esperaran demasiado y podran ir ejecutando de a poco. veamos un ejemplo:
+
+  %./simusched tareaRR2MejorCaso.tsk 2 0 10 SchedRR2 2 5 5 | ./graphsched.py > informe/Ej8MejorCasoRR2.png
+
+    \begin{figure}[H]
+      \includegraphics[scale=0.5]{Ej8MejorCasoRR2}
+      \caption{Simulacion schedRR2 para mejor caso en Ejercicio8}
+    \end{figure}
+
+  Como podemos observar, los procesos se reparten en los dos cpus y corren intermitentemente, como nunca cambian de procesador no pagan el costo de hacerlo. veamos ahora que pasaria en un entorno $round robin$ comun.
+  %./simusched tareaRR2MejorCaso.tsk 2 0 10 SchedRR 2 5 5 | ./graphsched.py > informe/Ej8MejorCasoRR.png
+
+    \begin{figure}[H]
+      \includegraphics[scale=0.5]{Ej8MejorCasoRR}
+      \caption{Simulacion schedRR para mejor caso en Ejercicio8}
+    \end{figure}
+
+  En este entorno los procesos intercambian cpus constantemente, con esto pagan siempre el costo de hacerlo por lo que demora enormemente que terminen de correr.
+  %mas metricas, metricas everiwere
+
+  Ahora veamos como correria en un contexto $FirstComeFirstServe$
+
+  %./simusched tareaRR2MejorCaso.tsk 2 0 10 SchedFCFS 2 5 5 | ./graphsched.py > informe/Ej8MejorCasoFCFS.png
+
+    \begin{figure}[H]
+      \includegraphics[scale=0.5]{Ej8MejorCasoFCFS}
+      \caption{Simulacion $First\ Come\ First\ Serve$ para mejor caso en Ejercicio8}
+    \end{figure}
+
+  En este caso no se paga nada adicional, ya que los procesos empiezan cuando se les da el procesador y no iniciara el proximo hasta que este no termine, por lo que nunca pagara el costo de intercambio de cpu. Por otro lado el costo total que tomara procesar todo sera muchisimo mayor, ya que cuando algun proceso se bloquee no habra posibilidad de poner otro a correr en el medio haciendo que el total de corrida de los procesos sea mucho mayor.
+
+  \end{document}
 
