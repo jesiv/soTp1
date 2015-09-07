@@ -1,2 +1,6 @@
-TaskCPU 10
-TaskRolando 9
+@3:
+TaskCPU 6
+@6:
+TaskCPU 6
+@9:
+TaskCPU 6

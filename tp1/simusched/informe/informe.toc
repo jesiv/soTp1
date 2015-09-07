@@ -1,3 +1,14 @@
 \select@language {spanish}
 \contentsline {section}{\numberline {1}Ejercicio 1}{3}{section.1}
 \contentsline {section}{\numberline {2}Ejercicio 2}{4}{section.2}
+\contentsline {section}{\numberline {3}Ejercicio 3}{4}{section.3}
+\contentsline {section}{\numberline {4}Ejercicio 4}{6}{section.4}
+\contentsline {subsection}{\numberline {4.1}Elecci\IeC {\'o}n de estructuras}{6}{subsection.4.1}
+\contentsline {section}{\numberline {5}Ejercicio 5}{7}{section.5}
+\contentsline {subsection}{\numberline {5.1}An\IeC {\'a}lisis de \textit {Round-Robin} para distintos quantum}{7}{subsection.5.1}
+\contentsline {subsection}{\numberline {5.2}Conclusi\IeC {\'o}n}{8}{subsection.5.2}
+\contentsline {section}{\numberline {6}Ejercicio 6}{9}{section.6}
+\contentsline {subsection}{\numberline {6.1}Comparaci\IeC {\'o}n entre \textit {SchedRR} y \textit {SchedFCFS}}{9}{subsection.6.1}
+\contentsline {subsection}{\numberline {6.2}Conclusi\IeC {\'o}n}{9}{subsection.6.2}
+\contentsline {section}{\numberline {7}Ejercicio 7}{10}{section.7}
+\contentsline {subsection}{\numberline {7.1}Ejercicio 8}{10}{subsection.7.1}
